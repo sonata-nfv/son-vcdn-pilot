@@ -147,12 +147,13 @@ class CssFSM(sonSMbase):
         LOG.info("content: " + str(content.keys()))
         # TODO: Add the start logic. The content is a dictionary that contains
         # the required data
-        
+        # TODO = check vm_image if correct
+        vm_image = "sonata-vtc"
         vnfr = content["vnfr"]
-        for x in range(len(list)):
-            if (response['VNFR'][x]['virtual_deployment_units']
+        for x in range(len(vnfr)):
+            if (content['VNFR'][x]['virtual_deployment_units']
                     [0]['vm_image']) == vm_image:
-                mgmt_ip = (response['VNFR'][x]['virtual_deployment_units']
+                mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
                            [0]['vnfc_instance'][0]['connection_points'][0]
                            ['type']['address'])
 
@@ -187,12 +188,13 @@ class CssFSM(sonSMbase):
         LOG.info("content: " + str(content.keys()))
         # TODO: Add the stop logic. The content is a dictionary that contains
         # the required data
+        # TODO = check vm_image if correct
         vnfr = content['vnfr']
-
+        vm_image = "sonata-vtc"
         for x in range(len(vnfr)):
-            if (response['VNFR'][x]['virtual_deployment_units']
+            if (content['VNFR'][x]['virtual_deployment_units']
             [0]['vm_image']) == vm_image:
-                    mgmt_ip = (response['VNFR'][x]['virtual_deployment_units']
+                    mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
                    [0]['vnfc_instance'][0]['connection_points'][0]
                    ['type']['address'])
 
