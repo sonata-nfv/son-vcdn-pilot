@@ -22,6 +22,9 @@
 FROM python:3.4-slim
 MAINTAINER SONATA
 
+RUN apt-get update && apt-get -y python-pip ssh && \
+pip install paramiko
+
 # configrurations
 ENV mongo_host mongo
 ENV mongo_port 27017
