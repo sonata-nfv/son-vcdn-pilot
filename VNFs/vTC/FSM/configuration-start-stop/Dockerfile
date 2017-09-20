@@ -28,8 +28,8 @@ ENV mongo_port 27017
 ENV broker_host amqp://guest:guest@broker:5672/%2F
 ENV broker_exchange son-kernel
 
-ADD son-mano-framework/son-mano-base /son-mano-base
-ADD son-sm-template /son-sm-template
+ADD son-sm/son-mano-framework/son-mano-base /son-mano-base
+ADD son-sm/son-sm-template /son-sm-template
 
 
 WORKDIR /son-mano-base
