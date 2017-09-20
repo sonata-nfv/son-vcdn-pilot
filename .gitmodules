@@ -1,0 +1,3 @@
+[submodule "son-sm"]
+	path = son-sm
+	url = https://github.com/sonata-nfv/son-sm.git
