@@ -28,6 +28,7 @@ partner consortium (www.sonata-nfv.eu).
 
 import logging
 import yaml
+import requests
 from sonsmbase.smbase import sonSMbase
 
 logging.basicConfig(level=logging.INFO)
@@ -146,8 +147,29 @@ class CssFSM(sonSMbase):
         LOG.info("content: " + str(content.keys()))
         # TODO: Add the start logic. The content is a dictionary that contains
         # the required data
-
+        
         vnfr = content["vnfr"]
+        for x in range(len(list)):
+            if (response['VNFR'][x]['virtual_deployment_units']
+                    [0]['vm_image']) == vm_image:
+                mgmt_ip = (response['VNFR'][x]['virtual_deployment_units']
+                           [0]['vnfc_instance'][0]['connection_points'][0]
+                           ['type']['address'])
+
+        if not mgmt_ip:
+            LOG.error("Couldn't obtain IP address from VNFR")
+            return
+
+        
+        url = "http://"+mgmt_ip+":8080/startPFbridge"
+        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\"}"}
+
+        headers = {
+            'content-type': "application/x-www-form-urlencoded",
+            'accept': "application/json",
+            }
+        response = requests.request("POST", url, headers=headers, params=querystring)
+        LOG.info(response.text)
 
         # Create a response for the FLM
         response = {}
@@ -165,8 +187,25 @@ class CssFSM(sonSMbase):
         LOG.info("content: " + str(content.keys()))
         # TODO: Add the stop logic. The content is a dictionary that contains
         # the required data
-
         vnfr = content['vnfr']
+
+        for x in range(len(vnfr)):
+            if (response['VNFR'][x]['virtual_deployment_units']
+            [0]['vm_image']) == vm_image:
+                    mgmt_ip = (response['VNFR'][x]['virtual_deployment_units']
+                   [0]['vnfc_instance'][0]['connection_points'][0]
+                   ['type']['address'])
+
+        if not mgmt_ip:
+            LOG.error("Couldn't obtain IP address from VNFR")
+            return
+        url = "http://"+mgmt_ip+":8080/stopPFbridge"
+
+        headers = {
+            'accept': "application/json",
+            }
+        response = requests.request("POST", url, headers=headers)
+        LOG.info(response.text)
 
         # Create a response for the FLM
         response = {}

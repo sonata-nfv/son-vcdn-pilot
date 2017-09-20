@@ -63,7 +63,7 @@ setup(
     keywords='NFV orchestrator',
 
     packages=find_packages("css"),
-    install_requires=['pika', 'pytest'],
+    install_requires=['pika', 'pytest','requests'],
     setup_requires=['pytest-runner'],
 
     # To provide executable scripts, use entry points in preference to the
