@@ -1,5 +1,6 @@
-import paramiko, sys
+import sys
 import configparser
+from ssh import Client
 
 def createConf(pw_ip, interval, name):
 
