@@ -1,9 +1,9 @@
 import paramiko, sys
-import ConfigParser
+import configparser
 
 def createConf(pw_ip, interval, name):
 
-    config = ConfigParser.RawConfigParser()
+    config = configparser.RawConfigParser()
     config.add_section('vm_node')
     config.add_section('Prometheus')
     config.set('vm_node', 'node_name', name)
@@ -23,17 +23,9 @@ if __name__ == "__main__":
     
     createConf('sp.int3.sonata-nfv.eu', 4, 'vtc-nfv')
     
-    ssh = paramiko.SSHClient()
-    #ssh.load_host_keys(os.path.expanduser(os.path.join("~", ".ssh", "known_hosts")))
-    ssh.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-    ssh.connect(host_ip, username=user, password=pw)
-    sftp = ssh.open_sftp()
-    sftp.put('node.conf', '/tmp/node.conf')
-    sftp.close()
-    ssh.exec_command("sudo mv /tmp/node.conf /opt/Monitoring/node.conf")
-    ssh.exec_command("sudo service mon-probe restart")
-    #out=stdout.readlines()
-    #print(stdin.readlines())
-    #print(stdout.readlines())
-    #print(stderr.readlines())
-    ssh.close()
+    ssh_client = Client(host_ip,user,pw)
+    ssh_client.sendFile('node.conf')
+    ssh_client.sendCommand('ls /tmp/')
+    ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+    ssh_client.sendCommand('sudo service mon-probe restart')
+    ssh_client.close()
