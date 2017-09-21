@@ -22,7 +22,7 @@
 FROM python:3.4-slim
 MAINTAINER SONATA
 
-RUN apt-get update && apt-get -y python-pip ssh && \
+RUN apt-get update && apt-get install -y python-pip ssh && \
 pip install paramiko
 
 # configrurations
