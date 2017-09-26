@@ -30,6 +30,7 @@ import logging
 import yaml
 import requests
 from sonsmbase.smbase import sonSMbase
+from ssh import Client
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger("fsm-start-stop-configure")
@@ -172,6 +173,24 @@ class CssFSM(sonSMbase):
         response = requests.request("POST", url, headers=headers, params=querystring)
         LOG.info(response.text)
 
+        #Configure montoring probe
+        sp_ip = content['service_platform_ip']
+
+        if sp_ip:
+            LOG.info('Mon Config: Create new conf file')
+            createConf(sp_ip, 4, 'vtc-vnf')
+            ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
+            ssh_client.sendFile('node.conf')
+            ssh_client.sendCommand('ls /tmp/')
+            ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+            ssh_client.sendCommand('sudo service mon-probe restart')
+            ssh_client.close()
+            LOG.info('Mon Config: Completed')
+
+        else:
+            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
+
+
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
@@ -253,6 +272,23 @@ class CssFSM(sonSMbase):
         # TODO: complete the response
 
         return response
+
+    def createConf(self, pw_ip, interval, name):
+
+        config = configparser.RawConfigParser()
+        config.add_section('vm_node')
+        config.add_section('Prometheus')
+        config.set('vm_node', 'node_name', name)
+        config.set('vm_node', 'post_freq', interval)
+        config.set('Prometheus', 'server_url', 'http://'+pw_ip+':9091/metrics')
+    
+    
+        with open('node.conf', 'w') as configfile:    # save
+            config.write(configfile)
+    
+        f = open('node.conf', 'r')
+        LOG.debug('Mon Config-> '+"\n"+f.read())
+        f.close()
 
 
 def main():

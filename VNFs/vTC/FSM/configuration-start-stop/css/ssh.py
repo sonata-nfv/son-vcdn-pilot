@@ -26,26 +26,43 @@ acknowledge the contributions of their colleagues of the SONATA
 partner consortium (www.sonata-nfv.eu).
 '''
 
-import paramiko
+import paramiko,socket
 
 class Client(object):
     client = None
+    LOG = None
+    connected = False
     
-    def __init__(self, address, username, password):
+    def __init__(self, address, username, password, logger):
         print("Connecting to server.")
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.client.connect(address, username=username, password=password, look_for_keys=False)
+        self.LOG = logger 
+        
+        try:
+            self.client.connect(address, username=username, password=password, look_for_keys=False, timeout=5)
+            self.connected = True
+        except (paramiko.BadHostKeyException) as  exception:
+            self.LOG.info("Mon Config:SSH: "+str(exception))
+        except (paramiko.AuthenticationException)  as  exception:
+            self.LOG.info("Mon Config:SSH: "+str(exception))
+        except (paramiko.SSHException)  as  exception:
+            self.LOG.info("Mon Config:SSH: "+str(exception))
+        except (socket.error)  as  exception:
+            self.LOG.info("Mon Config:SHH: "+str(exception))
         
     def sendFile(self,file):
-        print("Send file...")
-        sftp = self.client.open_sftp()
-        sftp.put(file, '/tmp/'+file)
-        sftp.close()
+        if(self.client and self.connected):
+            self.LOG.info("Mon Config:SHH:Send file...")
+            sftp = self.client.open_sftp()
+            sftp.put(file, '/tmp/'+file)
+            sftp.close()
+        else:
+            self.LOG.info("Mon Config:SHH:File sending aborted")
 
 
     def sendCommand(self, command):
-        if(self.client):
+        if(self.client and self.connected):
             stdin, stdout, stderr = self.client.exec_command(command)
             while not stdout.channel.exit_status_ready():
                 # Print data when available
@@ -55,16 +72,16 @@ class Client(object):
                     while prevdata:
                         prevdata = stdout.channel.recv(1024)
                         alldata += prevdata
-                    print(str(alldata))
-                    #print(str(alldata),"utf8")
+                    self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata)+"}")
+                    return str(alldata)
+                
         else:
-            print("Connection not opened.")
+            self.LOG.info("Mon Config:SHH:"+command+" aborted.")
 
     
     def close(self):
-        print('Close session')
+        self.LOG.info('Mon Config:SHH:Close session')
         self.client.close()
         
-    
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)

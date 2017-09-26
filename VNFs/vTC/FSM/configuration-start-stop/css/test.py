@@ -1,6 +1,12 @@
 import sys
 import configparser
+import logging
 from ssh import Client
+
+logging.basicConfig(level=logging.INFO)
+LOG = logging.getLogger("fsm-start-stop-configure-test")
+LOG.setLevel(logging.DEBUG)
+logging.getLogger("son-mano-base:messaging-test").setLevel(logging.INFO)
 
 def createConf(pw_ip, interval, name):
 
@@ -14,6 +20,10 @@ def createConf(pw_ip, interval, name):
     with open('node.conf', 'w') as configfile:    # save
         config.write(configfile)
 
+    f = open('node.conf', 'r')
+    LOG.debug('Mon Config-> '+"\n"+f.read())
+    f.close()
+
 
 if __name__ == "__main__":
     
@@ -22,9 +32,10 @@ if __name__ == "__main__":
     pw='randompassword'
     
     
+    LOG.info('Mon Config: Create new conf file')
     createConf('sp.int3.sonata-nfv.eu', 4, 'vtc-nfv')
     
-    ssh_client = Client(host_ip,user,pw)
+    ssh_client = Client(host_ip,user,pw,LOG)
     ssh_client.sendFile('node.conf')
     ssh_client.sendCommand('ls /tmp/')
     ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
