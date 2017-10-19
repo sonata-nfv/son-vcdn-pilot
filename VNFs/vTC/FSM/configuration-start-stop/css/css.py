@@ -31,6 +31,13 @@ import yaml
 import requests
 from sonsmbase.smbase import sonSMbase
 from ssh import Client
+import netaddr
+
+def reverse(ip):
+        if len(ip) <= 1:
+                return ip
+        l = ip.split('.')
+        return '.'.join(l[::-1])
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger("fsm-start-stop-configure")
@@ -248,10 +255,24 @@ class CssFSM(sonSMbase):
         nsr = content['nsr']
         vnfrs = content['vnfrs']
 
+        vtuIP = "10.100.32.214"  # TODO --- replace THIS. just a placeholder
+        try:
+            iprev = reverse(vtuIP)
+            LOG.info("Got the reverse IP to be turned to integer: "+iprev)
+            ipInt = int(netaddr.IPAddress(iprev))
+            LOG.info("Got the Integer from the IP: "+ipInt)
+        except Exception as err: 
+            LOG.error("Got an exception: "+err)
+            return
+
+        LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
+        ssh_client = Client(host_ip,user,pw,LOG)
+        ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
+        ssh_client.close()
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
-
+    
         # TODO: complete the response
 
         return response
