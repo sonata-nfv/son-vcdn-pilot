@@ -29,6 +29,7 @@ partner consortium (www.sonata-nfv.eu).
 import logging
 import yaml
 from sonsmbase.smbase import sonSMbase
+from ssh import Client
 
 logging.basicConfig(level=logging.INFO)
 LOG = logging.getLogger("fsm-start-stop-configure")
@@ -148,6 +149,35 @@ class CssFSM(sonSMbase):
         # the required data
 
         vnfr = content["vnfr"]
+        vm_image = "sonata-vtu"
+        vnfr = content["vnfr"]
+        for x in range(len(vnfr)):
+            if (content['VNFR'][x]['virtual_deployment_units']
+                    [0]['vm_image']) == vm_image:
+                mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
+                           [0]['vnfc_instance'][0]['connection_points'][0]
+                           ['type']['address'])
+
+        if not mgmt_ip:
+            LOG.error("Couldn't obtain IP address from VNFR")
+            return
+
+        #Configure montoring probe
+        sp_ip = content['service_platform_ip']
+
+        if sp_ip:
+            LOG.info('Mon Config: Create new conf file')
+            createConf(sp_ip, 4, 'vtu-vnf')
+            ssh_client = Client(mgmt_ip,'manager','m@n@g3r',LOG)
+            ssh_client.sendFile('node.conf')
+            ssh_client.sendCommand('ls /tmp/')
+            ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+            ssh_client.sendCommand('sudo service mon-probe restart')
+            ssh_client.close()
+            LOG.info('Mon Config: Completed')
+
+        else:
+            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
         # Create a response for the FLM
         response = {}
