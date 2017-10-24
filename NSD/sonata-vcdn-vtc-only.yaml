@@ -45,10 +45,10 @@ connection_points:
     type: "management"
   - id: "cpinput"
     interface: "ipv4"
-    type: "input"
+    type: "external"
   - id: "cpoutput"
     interface: "ipv4"
-    type: "output"
+    type: "external"
 
 ##
 ## The virtual links that interconnect
@@ -58,18 +58,18 @@ virtual_links:
   - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf_vtc:cpmgmt"
+      - "vnf_vtc:mgmt"
       - "cpmgmt"
   - id: "vtc-in"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "cpinput"
-      - "vnf_vtc:cpinput"
+      - "vnf_vtc:input"
   - id: "vtc-out"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf_vpn:cpoutput"
-      - "vnf_fw:cpinput"
+      - "vnf_vpn:output"
+      - "cpoutput"
 
 ##
 ## The forwarding graphs.
@@ -86,13 +86,9 @@ forwarding_graphs:
         connection_points:
           - connection_point_ref: "cpinput"
             position: 1
-          - connection_point_ref: "vnf_vpn:cpinput"
+          - connection_point_ref: "vnf_vtc:input"
             position: 2
-          - connection_point_ref: "vnf_vpn:cpoutput"
+          - connection_point_ref: "vnf_vtc:output"
             position: 3
-          - connection_point_ref: "vnf_fw:cpinput"
-            position: 4
-          - connection_point_ref: "vnf_fw:cpoutput"
-            position: 5
           - connection_point_ref: "cpoutput"
-            position: 6
+            position: 4
