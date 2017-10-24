@@ -7,11 +7,11 @@
 descriptor_version: "1.0"
 
 vendor: "eu.sonata-nfv.service-descriptor"
-name: "sonata-vcdn"
+name: "sonata-vtc-only"
 version: "0.8"
 author: "SONATA Consortium"
 description: >
-  "Content Delivery Network pilot"
+  "Test-case sonata-vtc-only"
 ##
 ## The various network functions this service
 ## is composed of.
@@ -20,15 +20,7 @@ network_functions:
   - vnf_id: "vnf_vtc"
     vnf_vendor: "eu.sonata-nfv"
     vnf_name: "vpn-vnf"
-    vnf_version: "0.7"
-  - vnf_id: "vnf_cache"
-    vnf_vendor: "eu.sonata-nfv"
-    vnf_name: "cache-vnf"
     vnf_version: "0.1"
-  - vnf_id: "vnf_fw"
-    vnf_vendor: "eu.sonata-nfv"
-    vnf_name: "fw-vnf"
-    vnf_version: "0.8"
 
 ##
 ## Some service specific managers.
@@ -53,10 +45,10 @@ connection_points:
     type: "management"
   - id: "cpinput"
     interface: "ipv4"
-    type: "external"
+    type: "input"
   - id: "cpoutput"
     interface: "ipv4"
-    type: "external"
+    type: "output"
 
 ##
 ## The virtual links that interconnect
@@ -66,27 +58,19 @@ virtual_links:
   - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf_vpn:cpmgmt"
-      - "vnf_cache:cpmgmt"
-      - "vnf_fw:cpmgmt"
-      - "vnf_ids:cpmgmt"
-      - "vnf_tor:cpmgmt"
+      - "vnf_vtc:cpmgmt"
       - "cpmgmt"
-  - id: "input-2-vpn"
+  - id: "vtc-in"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "cpinput"
-      - "vnf_vpn:cpinput"
-  - id: "vpn-2-fw"
+      - "vnf_vtc:cpinput"
+  - id: "vtc-out"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf_vpn:cpoutput"
       - "vnf_fw:cpinput"
-  - id: "fw-2-output"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vnf_fw:cpoutput"
-      - "cpoutput"
+
 ##
 ## The forwarding graphs.
 ##
