@@ -12,8 +12,9 @@ description: "VNF implementing a vProxy (Squid based with local cache and authen
 ##
 virtual_deployment_units:
   - id: "1"
-    vm_image: "squid-3.5.12-img"
+    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vcc-vnf/sonata-vcc"
     vm_image_format: "qcow2"
+    vm_image_md5: '712e3e02705df6fe6e5fe4d960a283ce'
     resource_requirements:
       cpu:
         vcpus: 1
