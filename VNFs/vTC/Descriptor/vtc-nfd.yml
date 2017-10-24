@@ -77,7 +77,7 @@ virtual_deployment_units:
 connection_points:
   - id: "vnf:mgmt"
     interface: "ipv4"
-    type: "mgmt"
+    type: "management"
   - id: "vnf:input"
     interface: "ipv4"
     type: "internal"
