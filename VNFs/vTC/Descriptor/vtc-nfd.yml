@@ -57,6 +57,8 @@ virtual_deployment_units:
 	  	  unit: "pps"
       - name: "mbits_packets_youtube"
         unit: "pps"
+    
+
     connection_points:
       - id: "vdu01:eth0"
         interface: "ipv4"
@@ -69,6 +71,22 @@ virtual_deployment_units:
         type: "output"
  
 ##
+## The VNF connection points to the 
+## outside world.
+##
+connection_points:
+  - id: "vnf:mgmt"
+    interface: "ipv4"
+    type: "mgmt"
+  - id: "vnf:input"
+    interface: "ipv4"
+    type: "internal"
+  - id: "vnf:output"
+    interface: "ipv4"
+    type: "internal"
+
+
+##
 ## The virtual links that interconnect
 ## the different connections points.
 ##
@@ -77,7 +95,7 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vdu01:eth0"
-      - "mgmt"
+      - "vnf:mgmt"
   - id: "input"
     connectivity_type: "E-Line"
     connection_points_reference:
@@ -89,20 +107,7 @@ virtual_links:
       - "vdu01:eth2"
       - "vnf:output"
  
-##
-## The VNF connection points to the 
-## outside world.
-##
-connection_points:
-  - id: "vnf:mgmt"
-    interface: "ipv4"
-    type: "management"
-  - id: "vnf:input"
-    interface: "ipv4"
-    type: "internal"
-  - id: "vnf:output"
-    interface: "ipv4"
-    type: "internal"
+
 
 monitoring_rules:
   - name: "mon:rule:mbits_packets_all"
