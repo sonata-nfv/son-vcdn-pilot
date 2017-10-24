@@ -45,10 +45,10 @@ connection_points:
     type: "management"
   - id: "input"
     interface: "ipv4"
-    type: "input"
+    type: "external"
   - id: "output"
     interface: "ipv4"
-    type: "output"
+    type: "external"
 
 ##
 ## The virtual links that interconnect
@@ -58,17 +58,17 @@ virtual_links:
   - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf-vtc:mgmt"
+      - "vnf_vtc:mgmt"
       - "mgmt"
   - id: "vtc-in"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "input"
-      - "vnf-vtc:input"
+      - "vnf_vtc:input"
   - id: "vtc-out"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf-vtc:output"
+      - "vnf_vtc:output"
       - "output"
 
 ##
