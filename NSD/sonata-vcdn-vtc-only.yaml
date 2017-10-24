@@ -40,13 +40,13 @@ network_functions:
 ## outside world.
 ##
 connection_points:
-  - id: "cpmgmt"
+  - id: "mgmt"
     interface: "ipv4"
     type: "management"
-  - id: "cpinput"
+  - id: "input"
     interface: "ipv4"
     type: "external"
-  - id: "cpoutput"
+  - id: "output"
     interface: "ipv4"
     type: "external"
 
@@ -59,17 +59,17 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf_vtc:mgmt"
-      - "cpmgmt"
+      - "mgmt"
   - id: "vtc-in"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "cpinput"
+      - "input"
       - "vnf_vtc:input"
   - id: "vtc-out"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf_vpn:output"
-      - "cpoutput"
+      - "vnf_vtc:output"
+      - "output"
 
 ##
 ## The forwarding graphs.
@@ -79,16 +79,16 @@ forwarding_graphs:
     number_of_endpoints: 2
     number_of_virtual_links: 3
     constituent_vnfs:
-      - "vnf_vtc"
+      - "vnf-vtc"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp01"
         policy: "none"
         connection_points:
-          - connection_point_ref: "cpinput"
+          - connection_point_ref: "input"
             position: 1
-          - connection_point_ref: "vnf_vtc:input"
+          - connection_point_ref: "vnf-vtc:input"
             position: 2
-          - connection_point_ref: "vnf_vtc:output"
+          - connection_point_ref: "vnf-vtc:output"
             position: 3
-          - connection_point_ref: "cpoutput"
+          - connection_point_ref: "output"
             position: 4
