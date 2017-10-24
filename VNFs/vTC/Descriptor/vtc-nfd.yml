@@ -12,8 +12,9 @@ description: "VNF implementing a vTC for traffic inspection and classification"
 ##
 virtual_deployment_units:
   - id: "1"
-    vm_image: "vtc-XXXXX.img"
+    vm_image: "http://files.sonata-nfv.eu/son-psa-pilot/vpn-vnf/sonata-vtc.qcow2"
     vm_image_format: "qcow2"
+    vm_image_md5: 'afbf1f25d17f9dcb848a5a72af579c38'
     resource_requirements:
       cpu:
         vcpus: 2
