@@ -99,12 +99,12 @@ virtual_links:
   - id: "input"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vdu01:eth1"
+      - "vdu01:input"
       - "input"
   - id: "output"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vdu01:eth2"
+      - "vdu01:output"
       - "output"
  
 
