@@ -62,7 +62,7 @@ virtual_deployment_units:
     connection_points:
       - id: "vdu01:eth0"
         interface: "ipv4"
-        type: "mgmt"
+        type: "management"
       - id: "vdu01:eth1"
         interface: "ipv4"
         type: "input"
@@ -95,7 +95,7 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vdu01:eth0"
-      - "vnf:mgmt"
+      - "vnf:management"
   - id: "input"
     connectivity_type: "E-Line"
     connection_points_reference:
