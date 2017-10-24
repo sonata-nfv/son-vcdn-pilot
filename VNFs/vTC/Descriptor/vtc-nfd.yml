@@ -11,7 +11,7 @@ description: "VNF implementing a vTC for traffic inspection and classification"
 ## The virtual deployment unit.
 ##
 virtual_deployment_units:
-  - id: "1"
+  - id: "vdu01"
     vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtc-vnf/sonata-vtc.qcow2"
     vm_image_format: "qcow2"
     vm_image_md5: 'afbf1f25d17f9dcb848a5a72af579c38'
@@ -60,30 +60,30 @@ virtual_deployment_units:
     
 
     connection_points:
-      - id: "vdu01:eth0"
+      - id: "eth0"
         interface: "ipv4"
         type: "management"
-      - id: "vdu01:eth1"
+      - id: "input"
         interface: "ipv4"
-        type: "input"
-      - id: "vdu01:eth2"
+        type: "internal"
+      - id: "output"
         interface: "ipv4"
-        type: "output"
+        type: "internal"
  
 ##
 ## The VNF connection points to the 
 ## outside world.
 ##
 connection_points:
-  - id: "vnf:mgmt"
+  - id: "mgmt"
     interface: "ipv4"
     type: "management"
-  - id: "vnf:input"
+  - id: "input"
     interface: "ipv4"
-    type: "internal"
-  - id: "vnf:output"
+    type: "external"
+  - id: "output"
     interface: "ipv4"
-    type: "internal"
+    type: "external"
 
 
 ##
@@ -95,17 +95,17 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vdu01:eth0"
-      - "vnf:mgmt"
+      - "mgmt"
   - id: "input"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vdu01:eth1"
-      - "vnf:input"
+      - "input"
   - id: "output"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vdu01:eth2"
-      - "vnf:output"
+      - "output"
  
 
 
