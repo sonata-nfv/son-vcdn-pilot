@@ -17,9 +17,9 @@ description: >
 ## is composed of.
 ##
 network_functions:
-  - vnf_id: "vnf_vtc"
+  - vnf_id: "vnf_vcc"
     vnf_vendor: "eu.sonata-nfv"
-    vnf_name: "vpn-vnf"
+    vnf_name: "vcc-vnf"
     vnf_version: "0.1"
 
 ##
