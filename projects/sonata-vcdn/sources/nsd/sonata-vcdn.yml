@@ -81,6 +81,7 @@ virtual_links:
     connection_points_reference:
       - "cpoutput"
       - "vnf_vtc:cpoutput"
+      - "vnf_vcc:cpinput"
 #  - id: "input-2-vtc"
 #    connectivity_type: "E-Line"
 #    connection_points_reference:
