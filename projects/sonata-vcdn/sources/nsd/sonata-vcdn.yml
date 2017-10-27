@@ -63,28 +63,27 @@ connection_points:
 ## the different connections points.
 ##
 virtual_links:
-  - id: "mgmt"
+  - id: "vlmgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf_vtc:cpmgmt"
       - "vnf_vcc:cpmgmt"  
- #     - "vnf_vtu:cpmgmt"
       - "cpmgmt"
-  - id: "input"
-    connectivity_type: "E-LAN"
+  - id: "vlinput"
+    connectivity_type: "E-Line"
     connection_points_reference:
       - "cpinput"
       - "vnf_vtc:cpinput"
   - id: "vtc-2-vcc"
-    connectivity_type: "E-LAN"
+    connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf_vtc:cpoutput"
       - "vnf_vcc:cpinput"
-  - id: "out"
-    connectivity_type: "E-LAN"
+  - id: "vloutput"
+    connectivity_type: "E-Line"
     connection_points_reference:
+      - "vnf_vtc:cpoutput"
       - "cpoutput"
-      - "vnf_vcc:cpinput"
 #  - id: "input-2-vtc"
 #    connectivity_type: "E-Line"
 #    connection_points_reference:
@@ -110,15 +109,15 @@ virtual_links:
 forwarding_graphs:
   - fg_id: "ns:fg01"
     number_of_endpoints: 2
-    number_of_virtual_links: 3
+    number_of_virtual_links: 4
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vcc"
     constituent_virtual_links: 
-      - "mgmt"
-      - "input"
+      - "vlmgmt"
+      - "vlinput"
       - "vtc-2-vcc"
-      - "out"
+      - "vlout"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp01"
         policy: "none"
@@ -129,8 +128,14 @@ forwarding_graphs:
             position: 2
           - connection_point_ref: "vnf_vtc:cpoutput"
             position: 3
-          - connection_point_ref: "vnf_vcc:cpinput"
-            position: 4
           - connection_point_ref: "cpoutput"
-            position: 5
+            position: 4
+    network_forwarding_paths:
+      - fp_id: "ns:fg01:fp02"
+        policy: "none"
+        connection_points:
+          - connection_point_ref: "vnf_vtc:cpoutput"
+            position: 1
+          - connection_point_ref: "vnf_vcc:cpinput"
+            position: 2
 
