@@ -114,6 +114,11 @@ forwarding_graphs:
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vcc"
+    constituent_virtual_links: 
+      - "mgmt"
+      - "input"
+      - "vtc-2-vcc"
+      - "output"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp01"
         policy: "none"
