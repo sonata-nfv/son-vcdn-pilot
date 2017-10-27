@@ -67,7 +67,7 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf_vtc:cpmgmt"
-      - "vnf_vcc:cpmgmt"
+      - "vnf_vcc:cpmgmt"  
  #     - "vnf_vtu:cpmgmt"
       - "cpmgmt"
   - id: "input"
@@ -75,12 +75,15 @@ virtual_links:
     connection_points_reference:
       - "cpinput"
       - "vnf_vtc:cpinput"
+  - id: "vtc-2-vcc"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf_vtc:cpoutput"
       - "vnf_vcc:cpinput"
-  - id: "output"
+  - id: "out"
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "cpoutput"
-      - "vnf_vtc:cpoutput"
       - "vnf_vcc:cpinput"
 #  - id: "input-2-vtc"
 #    connectivity_type: "E-Line"
