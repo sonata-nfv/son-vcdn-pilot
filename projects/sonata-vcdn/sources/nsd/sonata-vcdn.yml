@@ -118,7 +118,7 @@ forwarding_graphs:
       - "mgmt"
       - "input"
       - "vtc-2-vcc"
-      - "output"
+      - "out"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp01"
         policy: "none"
