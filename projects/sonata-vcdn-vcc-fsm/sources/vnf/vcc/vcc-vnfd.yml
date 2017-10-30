@@ -88,4 +88,4 @@ function_specific_managers:
     image: "sonatanfv/vcdn-vcc-fsm-css"
     options:
       - key: "type"
-	value: "start"
+        value: "start"
