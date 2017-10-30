@@ -11,7 +11,7 @@ name: "sonata-vtu-only"
 version: "0.1"
 author: "SONATA Consortium"
 description: >
-  "Test-case sonata-vtc-only"
+  "Test-case sonata-vtu-only"
 ##
 ## The various network functions this service
 ## is composed of.
