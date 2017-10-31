@@ -7,19 +7,19 @@
 descriptor_version: "1.0"
 
 vendor: "eu.sonata-nfv.service-descriptor"
-name: "sonata-vtu-only"
+name: "sonata-vtc-only"
 version: "0.1"
 author: "SONATA Consortium"
 description: >
-  "Test-case sonata-vtu-only"
+  "Test-case sonata-vtc-only"
 ##
 ## The various network functions this service
 ## is composed of.
 ##
 network_functions:
-  - vnf_id: "vnf_vtu"
+  - vnf_id: "vnf_vtc"
     vnf_vendor: "eu.sonata-nfv"
-    vnf_name: "vtu-vnf"
+    vnf_name: "vtc-vnf"
     vnf_version: "0.1"
 
 ##
@@ -58,17 +58,17 @@ virtual_links:
   - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "vnf_vtu:mgmt"
+      - "vnf_vtc:mgmt"
       - "mgmt"
-  - id: "vtu-in"
+  - id: "vtc-in"
     connectivity_type: "E-Line"
     connection_points_reference:
       - "input"
-      - "vnf_vtu:input"
-  - id: "vtu-out"
+      - "vnf_vtc:input"
+  - id: "vtc-out"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf_vtu:output"
+      - "vnf_vtc:output"
       - "output"
 
 ##
@@ -79,16 +79,16 @@ forwarding_graphs:
     number_of_endpoints: 2
     number_of_virtual_links: 3
     constituent_vnfs:
-      - "vnf_vtu"
+      - "vnf_vtc"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp01"
         policy: "none"
         connection_points:
           - connection_point_ref: "input"
             position: 1
-          - connection_point_ref: "vnf_vtu:input"
+          - connection_point_ref: "vnf_vtc:input"
             position: 2
-          - connection_point_ref: "vnf_vtu:output"
+          - connection_point_ref: "vnf_vtc:output"
             position: 3
           - connection_point_ref: "output"
             position: 4
