@@ -70,7 +70,7 @@ virtual_links:
 forwarding_graphs:
   - fg_id: "ns:fg01"
     number_of_endpoints: 2
-    number_of_virtual_links: 3
+    number_of_virtual_links: 2
     constituent_vnfs:
       - "vnf_vtu"
     network_forwarding_paths:
@@ -81,5 +81,3 @@ forwarding_graphs:
             position: 1
           - connection_point_ref: "vnf_vtu:cpinput"
             position: 2
-#          - connection_point_ref: "cpoutput"
-#            position: 3
