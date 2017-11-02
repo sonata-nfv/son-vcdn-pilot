@@ -121,7 +121,7 @@ forwarding_graphs:
       - fp_id: "ns:fg01:fp01" # Incoming User Requests (for service) vtc-vcc
         policy: "none"
         connection_points:
-          - connection_point_ref: "cpinput"
+          - connection_point_ref: "nscpinput"
             position: 1
           - connection_point_ref: "vnf_vtc:cpinput"
             position: 2
@@ -129,13 +129,13 @@ forwarding_graphs:
             position: 3
           - connection_point_ref: "vnf_vcc:cpinput"
             position: 4 
-          - connection_point_ref: "cpoutput"
+          - connection_point_ref: "nscpoutput"
             position: 5
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp02" # Incoming User Requests (transcoding) (vtc-vtu)
         policy: "none"
         connection_points:
-          - connection_point_ref: "cpinput"
+          - connection_point_ref: "nscpinput"
             position: 1
           - connection_point_ref: "vnf_vtc:cpinput"
             position: 2
@@ -149,7 +149,7 @@ forwarding_graphs:
       - fp_id: "ns:fg01:fp03" # Server replies (vtc-vcc)
         policy: "none"
         connection_points:
-          - connection_point_ref: "cpinput"
+          - connection_point_ref: "nscpinput"
             position: 1
           - connection_point_ref: "vnf_vtc:cpinput"
             position: 2
@@ -157,7 +157,7 @@ forwarding_graphs:
             position: 3
           - connection_point_ref: "vnf_vcc:cpinput"
             position: 4 
-          - connection_point_ref: "cpoutput"
+          - connection_point_ref: "nscpoutput"
             position: 5  
 #NOTE from the ETSI document: When no Network Forwarding Paths element is 
 #included in a VNF Forwarding Graph descriptor, the forwarding path applicable to a traffic flow is decided at runtime (e.g. routeing of signalling messages 
