@@ -133,7 +133,7 @@ forwarding_graphs:
             position: 6
  - fg_id: "ns:fg02" 
     number_of_endpoints: 2
-    number_of_virtual_links: 2
+    number_of_virtual_links: 3
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vtu"
