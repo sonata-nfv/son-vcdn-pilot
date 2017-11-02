@@ -151,7 +151,11 @@ forwarding_graphs:
           - connection_point_ref: "vnf_vtc:cpoutput"
             position: 3
           - connection_point_ref: "vnf_vtu:cpinput"
-            position: 4  
+            position: 4
+          - connection_point_ref: "vnf_vtu:cpinput"
+            position: 5 
+           - connection_point_ref: "nscpoutput"
+            position: 6     
 
 #NOTE from the ETSI document: When no Network Forwarding Paths element is 
 #included in a VNF Forwarding Graph descriptor, the forwarding path applicable to a traffic flow is decided at runtime (e.g. routeing of signalling messages 
