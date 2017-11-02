@@ -83,23 +83,32 @@ virtual_links:
       - "vnf_vtu:cpmgmt"  
       - "nscpmgmt"
   - id: "vlinput"
-    connectivity_type: "E-LAN"
+    connectivity_type: "E-Line"
     connection_points_reference:
       - "nscpinput"
       - "vnf_vtc:cpinput"
 #      - "vnf_vcc:cpinput" # this should be here however it will brake the NSD - we need to modify 
-  - id: "vtc-chain"
-    connectivity_type: "E-LAN"
+  - id: "vtc-2-vcc"
+    connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf_vtc:cpoutput"
       - "vnf_vcc:cpinput"
-      - "vnf_vtu:cpinput"
-  - id: "vlout"
-    connectivity_type: "E-LAN"
+  - id: "vtc-2-vtu"
+    connectivity_type: "E-Line"
     connection_points_reference:
-      - "vnf_vcc:cpinput"
+      - "vnf_vtc:cpoutput"
+      - "vnf_vtu:cpinput"
+  - id: "vlvtcout"
+    connectivity_type: "E-Line"
+    connection_points_reference:
       - "vnf_vtc:cpinput"
       - "nscpoutput"
+  - id: "vlvccout"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf_vcc:cpinput"
+      - "nscpoutput"
+
 ##
 ## The forwarding graphs.
 ##
@@ -133,26 +142,8 @@ forwarding_graphs:
             position: 5
           - connection_point_ref: "nscpoutput"
             position: 6
-  - fg_id: "ns:fg02" 
-    number_of_endpoints: 2
-    number_of_virtual_links: 3
-    constituent_vnfs:
-      - "vnf_vtc"
-      - "vnf_vtu"
-    constituent_virtual_links: 
-      - "vtc-chain"
-    network_forwarding_paths:
-      - fp_id: "ns:fg02:fp01" # Incoming User Requests (transcoding) (vtc-vtu)
-        policy: "none"
-        connection_points:
-          - connection_point_ref: "nscpinput"
-            position: 1
-          - connection_point_ref: "vnf_vtc:cpinput"
-            position: 2
-          - connection_point_ref: "vnf_vtc:cpoutput"
-            position: 3
-          - connection_point_ref: "vnf_vtu:cpinput"
-            position: 4
+
+
 
 #NOTE from the ETSI document: When no Network Forwarding Paths element is 
 #included in a VNF Forwarding Graph descriptor, the forwarding path applicable to a traffic flow is decided at runtime (e.g. routeing of signalling messages 
