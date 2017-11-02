@@ -111,7 +111,6 @@ forwarding_graphs:
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vcc"
-      - "vnf_vtu"
     constituent_virtual_links: 
       - "vlinput" #the input to the NS (since it is a L3 redirection to the vTU may not be required in the definition.
       - "vtc-chain"
@@ -132,6 +131,15 @@ forwarding_graphs:
             position: 5
           - connection_point_ref: "nscpoutput"
             position: 6
+ - fg_id: "ns:fg02" 
+    number_of_endpoints: 2
+    number_of_virtual_links: 2
+    constituent_vnfs:
+      - "vnf_vtc"
+      - "vnf_vtu"
+    constituent_virtual_links: 
+      - "vlinput" #the input to the NS (since it is a L3 redirection to the vTU may not be required in the definition.
+      - "vtc-chain"
     network_forwarding_paths:
       - fp_id: "ns:fg01:fp02" # Incoming User Requests (transcoding) (vtc-vtu)
         policy: "none"
@@ -143,11 +151,7 @@ forwarding_graphs:
           - connection_point_ref: "vnf_vtc:cpoutput"
             position: 3
           - connection_point_ref: "vnf_vtu:cpinput"
-            position: 4 
-          - connection_point_ref: "vnf_vtu:cpinput"
-            position: 5 
-          - connection_point_ref: "nscpoutput"
-            position: 6   
+            position: 4  
 
 #NOTE from the ETSI document: When no Network Forwarding Paths element is 
 #included in a VNF Forwarding Graph descriptor, the forwarding path applicable to a traffic flow is decided at runtime (e.g. routeing of signalling messages 
