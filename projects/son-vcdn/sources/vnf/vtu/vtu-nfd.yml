@@ -13,7 +13,7 @@ description: "VNF implementing a vTU (virtual Transcoding Unit)"
 ##
 virtual_deployment_units:
   - id: "vdu01"
-    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu"
+    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2"
     vm_image_format: "qcow2"
     vm_image_md5: '197b91bbc4ee7b3992e88bfc1cadf3cb'
     resource_requirements:
