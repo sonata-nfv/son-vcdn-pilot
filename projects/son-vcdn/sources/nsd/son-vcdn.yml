@@ -133,13 +133,14 @@ forwarding_graphs:
             position: 6
  - fg_id: "ns:fg02" 
     number_of_endpoints: 2
-    number_of_virtual_links: 2
+    number_of_virtual_links: 3
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vtu"
     constituent_virtual_links: 
       - "vlinput" #the input to the NS (since it is a L3 redirection to the vTU may not be required in the definition.
       - "vtc-chain"
+      - "vlout"
     network_forwarding_paths:
       - fp_id: "ns:fg02:fp01" # Incoming User Requests (transcoding) (vtc-vtu)
         policy: "none"
