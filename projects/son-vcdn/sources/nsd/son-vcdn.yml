@@ -107,7 +107,7 @@ virtual_links:
 forwarding_graphs:
   - fg_id: "ns:fg01" 
     number_of_endpoints: 2
-    number_of_virtual_links: 3
+    number_of_virtual_links: 4
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vcc"
