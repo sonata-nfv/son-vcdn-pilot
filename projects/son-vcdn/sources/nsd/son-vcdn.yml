@@ -98,7 +98,7 @@ virtual_links:
     connectivity_type: "E-Line"
     connection_points_reference:
       - "vnf_vtc:cpoutput"
-      - "cpoutput"
+      - "nscpoutput"
 ##
 ## The forwarding graphs.
 ##
