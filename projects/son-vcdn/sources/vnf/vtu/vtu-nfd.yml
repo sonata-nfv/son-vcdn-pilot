@@ -41,9 +41,8 @@ virtual_deployment_units:
       - id: "cpinput"
         interface: "ipv4"
         type: "internal"
-      - id: "cpoutput"
-        interface: "ipv4"
-        type: "internal"
+
+
 
 ##
 ## The virtual links that interconnect
@@ -56,30 +55,26 @@ virtual_links:
       - "vdu01:eth0"
       - "cpmgmt"
   - id: "input"
-    connectivity_type: "E-Line"
+    connectivity_type: "E-LAN"
     connection_points_reference:
       - "vdu01:cpinput"
       - "cpinput"
-  - id: "output"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vdu01:cpoutput"
-      - "cpoutput"
+ #     - "cpoutput"
 
 ##
 ## The VNF connection points to the
 ## outside world.
 ##
 connection_points:
-  - id: "cpmgmt"
+  - id: "cpmgmt" # used for management and NSF mount
     interface: "ipv4"
     type: "management"
-  - id: "cpinput"
+  - id: "cpinput" # used for data-path
     interface: "ipv4"
     type: "external"
-  - id: "cpoutput"
-    interface: "ipv4"
-    type: "external"
+#  - id: "cpoutput"
+#    interface: "ipv4"
+#   type: "external"
 
 monitoring_rules:
   - name: "mon:rule:vm_cpu_usage_85_perc"
