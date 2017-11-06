@@ -30,7 +30,7 @@ import logging
 import yaml
 import requests
 from sonsmbase.smbase import sonSMbase
-from ssh import Client
+from .ssh import Client
 import netaddr
 
 def reverse(ip):

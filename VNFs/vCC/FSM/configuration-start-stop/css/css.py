@@ -29,7 +29,7 @@ partner consortium (www.sonata-nfv.eu).
 import logging
 import yaml
 from sonsmbase.smbase import sonSMbase
-from ssh import Client
+from .ssh import Client
 
 
 logging.basicConfig(level=logging.INFO)
