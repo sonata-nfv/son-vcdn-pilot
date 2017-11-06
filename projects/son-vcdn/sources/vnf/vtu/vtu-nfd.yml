@@ -92,7 +92,7 @@ monitoring_rules:
 function_specific_managers:
   - id: "sonfsmservice1function1css1"
     description: "FSM to do a first FSM test"
-    image: "sonatanfv/vcdn_vtu_fsm_css"
+    image: "sonatanfv/vcdn-vtu-fsm-css"
     options:
       - key: "type"
         value: "start"
