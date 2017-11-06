@@ -126,3 +126,13 @@ monitoring_rules:
     notification:
       - name: "notification02"
         type: "rabbitmq_message"
+##
+## Function Specific Managers
+##
+function_specific_managers:
+  - id: "sonfsmservice1function1css1"
+    description: "FSM to do a first FSM test"
+    image: "sonatanfv/vcdn_vtc_fsm_css"
+    options:
+      - key: "type"
+        value: "start"
