@@ -130,7 +130,7 @@ monitoring_rules:
 ## Function Specific Managers
 ##
 function_specific_managers:
-  - id: "sonfsmservice1function1css1"
+  - id: "sonfsmvtccss"
     description: "FSM to do a first FSM test"
     image: "sonatanfv/vcdn-vtc-fsm-css"
     options:
