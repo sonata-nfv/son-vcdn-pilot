@@ -157,30 +157,23 @@ class CssFSM(sonSMbase):
             return
 
         #Configure montoring probe
-        sp_ip = content['service_platform_ip']
-    
-        if sp_ip:
-            #Staring monitoring probe
-            LOG.info('Mon Config: Create new conf file')
-            createConf(sp_ip, 4, 'vtu-vnf')
-            ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
-            ssh_client.sendFile('node.conf')
-            ssh_client.sendCommand('ls /tmp/')
-            ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
-            LOG.info('Mon Start: Start Monitoring probe')
-            ssh_client.sendCommand('sudo service mon-probe restart')
-            ssh_client.close()
-            LOG.info('Mon Config: Completed')
+#        sp_ip = content['service_platform_ip']
 
-            #Configuring vTU docker container
-            LOG.info('vTU Start: Start the vTU docker container')
-            ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
-            command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(mgmt_ip)
-            ssh_client.sendCommand(command)
-            ssh_client.sendCommand('docker-compose up -d')
+#        if sp_ip:
+        ssh_client = Client(mgmt_ip,'ubuntu','s0nata',LOG)
+        sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
+        LOG.info("extracted sp_ip: " + str(sp_ip))
+        LOG.info('Mon Config: Create new conf file')
+        createConf(sp_ip, 4, 'vcc-vnf')
+        ssh_client.sendFile('node.conf')
+        ssh_client.sendCommand('ls /tmp/')
+        ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+        ssh_client.sendCommand('sudo service mon-probe restart')
+        ssh_client.close()
+        LOG.info('Mon Config: Completed')
 
-        else:
-            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
+        # else:
+        #     LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
         # Create a response for the FLM
         response = {}
