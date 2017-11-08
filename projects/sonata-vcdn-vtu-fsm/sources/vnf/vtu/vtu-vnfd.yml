@@ -1,18 +1,19 @@
 ##
-## vTU VNF descriptor.
+## Some general information regarding this
+## VNF descriptor.
 ##
-descriptor_version: "vnfd-schema-02"
+descriptor_version: "vnfd-schema-01"
 vendor: "eu.sonata-nfv"
 name: "vtu-vnf"
 version: "0.1"
-author: "Stavros Kolometsos  Demokritos"
-description: "VNF implementing a virtual transcoding unit"
+author: "Javier Fernandez Hidalgo, Einar Meyerson :@ i2CAT"
+description: "VNF implementing a vTU (virtual Transcoding Unit)"
 ##
 ## The virtual deployment unit.
 ##
 virtual_deployment_units:
-  - id: "1"
-    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu"
+  - id: "vdu01"
+    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2"
     vm_image_format: "qcow2"
     vm_image_md5: '197b91bbc4ee7b3992e88bfc1cadf3cb'
     resource_requirements:
@@ -34,46 +35,64 @@ virtual_deployment_units:
       - name: "vm_net_tx_bps"
         unit: "bps"
     connection_points:
-      - id: "cpeth0"
+      - id: "eth0"
         interface: "ipv4"
         type: "management"
-      - id: "cpeth1"
+      - id: "cpinput"
         interface: "ipv4"
         type: "internal"
-        
+
+
+
+##
 ## The virtual links that interconnect
 ## the different connections points.
 ##
 virtual_links:
-  - id: "vlmgmt"
+  - id: "mgmt"
     connectivity_type: "E-LAN"
     connection_points_reference:
-      - "1:cpeth0"
+      - "vdu01:eth0"
       - "cpmgmt"
-  - id: "vlinput"
-    connectivity_type: "E-Line"
+  - id: "input"
+    connectivity_type: "E-LAN"
     connection_points_reference:
-      - "1:cpeth1"
+      - "vdu01:cpinput"
       - "cpinput"
+ #     - "cpoutput"
 
 ##
-## The VNF connection points to the 
+## The VNF connection points to the
 ## outside world.
 ##
 connection_points:
-  - id: "cpmgmt"
+  - id: "cpmgmt" # used for management and NSF mount
     interface: "ipv4"
     type: "management"
-  - id: "cpinput"
+  - id: "cpinput" # used for data-path
     interface: "ipv4"
-    type: "internal"
+    type: "external"
+#  - id: "cpoutput"
+#    interface: "ipv4"
+#   type: "external"
 
 monitoring_rules:
   - name: "mon:rule:vm_cpu_usage_85_perc"
     description: "Trigger events if CPU load is above 85 percent."
     duration: 10
     duration_unit: "s"
-    condition: "1:vm_cpu_perc > 85"
+    condition: "vdu01:vm_cpu_perc > 85"
     notification:
       - name: "notification01"
         type: "rabbitmq_message"
+
+##
+## Function Specific Managers
+##
+function_specific_managers:
+  - id: "sonfsmvcdnvtucss1"
+    description: "FSM to do a first FSM test"
+    image: "sonatanfv/vcdn-vtu-fsm-css"
+    options:
+      - key: "type"
+        value: "start"
