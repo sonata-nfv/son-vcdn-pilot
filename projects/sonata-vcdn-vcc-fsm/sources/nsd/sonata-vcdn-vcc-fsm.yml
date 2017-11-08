@@ -7,11 +7,11 @@
 descriptor_version: "1.0"
 
 vendor: "eu.sonata-nfv.service-descriptor"
-name: "sonata-vcc-only"
+name: "sonata-vcc-fsm"
 version: "0.1"
 author: "SONATA Consortium"
 description: >
-  "Test-case sonata-vtc-only"
+  "Test-case sonata-vcc-fsm"
 ##
 ## The various network functions this service
 ## is composed of.
@@ -22,18 +22,17 @@ network_functions:
     vnf_name: "vcc-vnf"
     vnf_version: "0.1"
 
-## Service specific Managers
-# service_specific_managers:
-#  - id: "sonssmvcdntask-config-monitor1"
-#    description: "An SSM functioning as task, config and monitor SSM."
-#    image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
-#    options:
-#      - key: "type"
-#        value: "task"
-#      - key: "type"
-#        value: "configure"
-#      - key: "type"
-#        value: "monitor"
+##
+## Some service specific managers.
+## image: Specifies the DockerHub URI (user/image name) to fetch the SSM image from.
+##
+##service_specific_managers:
+##  - id: "ssmdumb"
+##    description: "An empty example SSM."
+##    image: "sonatanfv/ssmdumb"
+##    options:
+##      - key: "myKey"
+##        value: "myValue"
 
 
 ##
