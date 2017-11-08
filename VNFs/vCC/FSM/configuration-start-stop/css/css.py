@@ -59,8 +59,8 @@ class CssFSM(sonSMbase):
         """
 
         self.specific_manager_type = 'fsm'
-        self.service_name = 'service1'
-        self.function_name = 'function1'
+        self.service_name = 'vcdn'
+        self.function_name = 'vcc'
         self.specific_manager_name = 'css'
         self.id_number = '1'
         self.version = 'v0.1'
