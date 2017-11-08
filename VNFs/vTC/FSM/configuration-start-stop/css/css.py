@@ -156,14 +156,11 @@ class CssFSM(sonSMbase):
         # TODO: Add the start logic. The content is a dictionary that contains
         # the required data
         # TODO = check vm_image if correct
-        vm_image = "sonata-vtc"
+        vm_image = "vtc-vnf"
         vnfr = content["vnfr"]
-        for x in range(len(vnfr)):
-            if (content['vnfr'][x]['virtual_deployment_units']
-                    [0]['vm_image']) == vm_image:
-                mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
-                           [0]['vnfc_instance'][0]['connection_points'][0]
-                           ['type']['address'])
+        if (content['vnfd']['name']) == vm_image:
+            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
+
 
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
