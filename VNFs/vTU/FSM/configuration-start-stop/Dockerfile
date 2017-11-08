@@ -41,7 +41,7 @@ WORKDIR /son-sm-template
 RUN python setup.py install
 
 WORKDIR /
-ADD VNFs/vTC/FSM/configuration-start-stop /configuration-start-stop
+ADD VNFs/vTU/FSM/configuration-start-stop /configuration-start-stop
 
 WORKDIR /configuration-start-stop
 RUN python setup.py develop
