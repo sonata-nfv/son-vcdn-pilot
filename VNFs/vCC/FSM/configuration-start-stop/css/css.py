@@ -153,7 +153,7 @@ class CssFSM(sonSMbase):
         vm_image = "squid-3.5.12-img"
 
         for x in range(len(vnfr)):
-            if (content['VNFR'][x]['virtual_deployment_units']
+            if (content['vnfr'][x]['virtual_deployment_units']
                     [0]['vm_image']) == vm_image:
                 mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
                            [0]['vnfc_instance'][0]['connection_points'][0]
