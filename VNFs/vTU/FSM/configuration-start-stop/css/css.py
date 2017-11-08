@@ -160,7 +160,7 @@ class CssFSM(sonSMbase):
 #        sp_ip = content['service_platform_ip']
 
 #        if sp_ip:
-        ssh_client = Client(mgmt_ip,'ubuntu','s0nata',LOG)
+        ssh_client = Client(mgmt_ip,'sonata','s0nata',LOG)
         sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
         LOG.info("extracted sp_ip: " + str(sp_ip))
         LOG.info('Mon Config: Create new conf file')
