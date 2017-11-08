@@ -1,0 +1,86 @@
+#
+## This is the NSD of SONATA's vCDN pilot
+##
+## @author SONATA
+##
+---
+descriptor_version: "1.0"
+
+vendor: "eu.sonata-nfv.service-descriptor"
+name: "sonata-vcc-only"
+version: "0.1"
+author: "SONATA Consortium"
+description: >
+  "Test-case sonata-vtc-only"
+##
+## The various network functions this service
+## is composed of.
+##
+network_functions:
+  - vnf_id: "vnf_vcc"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "vcc-vnf"
+    vnf_version: "0.1"
+
+## Service specific Managers
+# service_specific_managers:
+#  - id: "sonssmvcdntask-config-monitor1"
+#    description: "An SSM functioning as task, config and monitor SSM."
+#    image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
+#    options:
+#      - key: "type"
+#        value: "task"
+#      - key: "type"
+#        value: "configure"
+#      - key: "type"
+#        value: "monitor"
+
+
+##
+## The NS connection points to the
+## outside world.
+##
+connection_points:
+  - id: "cpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "cpinput"
+    interface: "ipv4"
+    type: "external"
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "vlmgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf_vcc:cpmgmt"
+      - "cpmgmt"
+  - id: "input-to-vcc"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "cpinput"
+      - "vnf_vcc:cpinput"
+      
+  
+##
+## The forwarding graphs.
+##
+forwarding_graphs:
+  - fg_id: "ns:fg01"
+    number_of_endpoints: 2
+    number_of_virtual_links: 3
+    constituent_vnfs:
+      - "vnf_vcc"
+    network_forwarding_paths:
+      - fp_id: "ns:fg01:fp01"
+        policy: "none"
+        connection_points:
+          - connection_point_ref: "cpinput"
+            position: 1
+          - connection_point_ref: "vnf_vcc:cpinput"
+            position: 2
+#          - connection_point_ref: "cpoutput"
+#            position: 3
