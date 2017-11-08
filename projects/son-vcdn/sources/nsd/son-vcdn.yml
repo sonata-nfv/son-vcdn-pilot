@@ -42,17 +42,19 @@ network_functions:
     vnf_name: "vtu-vnf"
     vnf_version: "0.1"
 
-##
-## Some service specific managers.
-## image: Specifies the DockerHub URI (user/image name) to fetch the SSM image from.
-##
-##service_specific_managers:
-##  - id: "ssmdumb"
-##    description: "An empty example SSM."
-##    image: "sonatanfv/ssmdumb"
-##    options:
-##      - key: "myKey"
-##        value: "myValue"
+
+## Service specific Managers
+service_specific_managers:
+ - id: "sonssmvcdntask-config-monitor1"
+   description: "An SSM functioning as task, config and monitor SSM."
+   image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
+   options:
+     - key: "type"
+       value: "task"
+     - key: "type"
+       value: "configure"
+     - key: "type"
+       value: "monitor"
 
 
 ##
