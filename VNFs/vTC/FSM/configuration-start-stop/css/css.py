@@ -29,6 +29,7 @@ partner consortium (www.sonata-nfv.eu).
 import logging
 import yaml
 import requests
+import time
 import configparser
 from sonsmbase.smbase import sonSMbase
 from .ssh import Client
@@ -177,7 +178,7 @@ class CssFSM(sonSMbase):
             'accept': "application/json",
             }
 
-        number_of_retries = 10
+        number_of_retries = 20
         for i in range(number_of_retries):
             LOG.info("Attempting new post request: attempt " + str(i + 1))
             try:
