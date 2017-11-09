@@ -162,9 +162,10 @@ class CssFSM(sonSMbase):
 
 #        if sp_ip:
         ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
-        sp_ip_coded = ssh_client.sendCommand('echo $SSH_CLIENT | cut -d" " -f 1')
-        LOG.info("extracted coded sp_ip: " + str(sp_ip_coded))
-        sp_ip = str(sp_ip_coded, 'utf-8')
+#        sp_ip_coded = ssh_client.sendCommand('echo $SSH_CLIENT | cut -d" " -f 1')
+#        LOG.info("extracted coded sp_ip: " + str(sp_ip_coded))
+#        sp_ip = str(sp_ip_coded, 'utf-8')
+        sp_ip = '10.30.0.112'
         LOG.info("extracted sp_ip: " + str(sp_ip))
         LOG.info('Mon Config: Create new conf file')
         self.createConf(sp_ip, 4, 'vtu-vnf')
