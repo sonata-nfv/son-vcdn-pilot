@@ -164,7 +164,7 @@ class CssFSM(sonSMbase):
         sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
         LOG.info("extracted sp_ip: " + str(sp_ip))
         LOG.info('Mon Config: Create new conf file')
-        self.createConf(sp_ip, 4, 'vcc-vnf')
+        self.createConf(sp_ip, 4, 'vtu-vnf')
         ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
