@@ -183,19 +183,19 @@ class CssFSM(sonSMbase):
         except eri as Exception:
             LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
-        if sp_ip:
-            LOG.info('Mon Config: Create new conf file')
-            createConf(sp_ip, 4, 'vtc-vnf')
-            ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
-            ssh_client.sendFile('node.conf')
-            ssh_client.sendCommand('ls /tmp/')
-            ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
-            ssh_client.sendCommand('sudo service mon-probe restart')
-            ssh_client.close()
-            LOG.info('Mon Config: Completed')
+        #if sp_ip:
+        #LOG.info('Mon Config: Create new conf file')
+        #   createConf(sp_ip, 4, 'vtc-vnf')
+        ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
+        #  ssh_client.sendFile('node.conf')
+        ssh_client.sendCommand('ls /tmp/')
+        ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+        ssh_client.sendCommand('sudo service mon-probe restart')
+        ssh_client.close()
+        LOG.info('Mon Config: Completed')
 
-        else:
-            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
+        #else:
+         #   LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
 
         # Create a response for the FLM
