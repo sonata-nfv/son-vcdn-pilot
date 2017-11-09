@@ -250,7 +250,7 @@ class CssFSM(sonSMbase):
         # contains the required data
 
         nsr = content['nsr']
-        vnfrs = content['vnfr']
+        vnfrs = content['vnfrs']
 
         vtuIP = "10.100.32.214"  # TODO --- replace THIS. just a placeholder
         try:
