@@ -146,10 +146,11 @@ class CssFSM(sonSMbase):
         """
         LOG.info("Performing life cycle start event")
         LOG.info("content: " + str(content.keys()))
-        # TODO: Add the start logic. The content is a dictionary that contains
-        # the required data
+
+        # Extracting the ip of the management interface from the vnfr
         vm_image = "vtu-vnf"
         vnfr = content["vnfr"]
+
         if (content['vnfd']['name']) == vm_image:
             mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
 
@@ -157,16 +158,17 @@ class CssFSM(sonSMbase):
             LOG.error("Couldn't obtain IP address from VNFR")
             return
 
-        #Configure montoring probe
-#        sp_ip = content['service_platform_ip']
-
-#        if sp_ip:
+        # Setting up ssh connection with the VNF
         ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
+
+        # Extracting the ip of the service platform
 #        sp_ip_coded = ssh_client.sendCommand('echo $SSH_CLIENT | cut -d" " -f 1')
 #        LOG.info("extracted coded sp_ip: " + str(sp_ip_coded))
 #        sp_ip = str(sp_ip_coded, 'utf-8')
         sp_ip = '10.30.0.112'
         LOG.info("extracted sp_ip: " + str(sp_ip))
+
+        # Configuring the monitoring probe
         LOG.info('Mon Config: Create new conf file')
         self.createConf(sp_ip, 4, 'vtu-vnf')
         ssh_client.sendFile('node.conf')
