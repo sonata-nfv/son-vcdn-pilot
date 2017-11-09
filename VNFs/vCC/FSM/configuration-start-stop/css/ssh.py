@@ -27,30 +27,41 @@ partner consortium (www.sonata-nfv.eu).
 '''
 
 import paramiko,socket
+import time
+
 
 class Client(object):
     client = None
     LOG = None
     connected = False
-    
-    def __init__(self, address, username, password, logger):
+
+    def __init__(self, address, username, password, logger, retries=1):
         print("Connecting to server.")
         self.client = paramiko.SSHClient()
         self.client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-        self.LOG = logger 
-        
-        try:
-            self.client.connect(address, username=username, password=password, look_for_keys=False, timeout=5)
-            self.connected = True
-        except (paramiko.BadHostKeyException) as  exception:
-            self.LOG.info("Mon Config:SSH: "+str(exception))
-        except (paramiko.AuthenticationException)  as  exception:
-            self.LOG.info("Mon Config:SSH: "+str(exception))
-        except (paramiko.SSHException)  as  exception:
-            self.LOG.info("Mon Config:SSH: "+str(exception))
-        except (socket.error)  as  exception:
-            self.LOG.info("Mon Config:SHH: "+str(exception))
-        
+        self.LOG = logger
+
+        for i in range(retries):
+            self.LOG.info("Setting up SSH connection, attempt " + str(i + 1))
+            try:
+                self.client.connect(address, username=username, password=password, look_for_keys=False, timeout=5)
+                self.connected = True
+            except (paramiko.BadHostKeyException) as  exception:
+                self.LOG.info("Mon Config:SSH: "+str(exception))
+            except (paramiko.AuthenticationException)  as  exception:
+                self.LOG.info("Mon Config:SSH: "+str(exception))
+            except (paramiko.SSHException)  as  exception:
+                self.LOG.info("Mon Config:SSH: "+str(exception))
+            except (socket.error)  as  exception:
+                self.LOG.info("Mon Config:SHH: "+str(exception))
+
+            if self.connected:
+                self.LOG.info("SSH connection established")
+                break
+            else:
+                self.LOG.info("SSH connection failed")
+                time.sleep(5)
+
     def sendFile(self,file):
         if(self.client and self.connected):
             self.LOG.info("Mon Config:SHH:Send file...")
@@ -59,7 +70,6 @@ class Client(object):
             sftp.close()
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
-
 
     def sendCommand(self, command):
         if(self.client and self.connected):
@@ -74,14 +84,13 @@ class Client(object):
                         alldata += prevdata
                     self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata)+"}")
                     return str(alldata)
-                
+
         else:
             self.LOG.info("Mon Config:SHH:"+command+" aborted.")
 
-    
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')
         self.client.close()
-        
+
     def __str__(self):
         return str(self.__class__) + ": " + str(self.__dict__)
