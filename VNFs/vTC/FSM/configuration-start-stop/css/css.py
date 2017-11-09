@@ -34,6 +34,7 @@ from sonsmbase.smbase import sonSMbase
 from .ssh import Client
 import netaddr
 
+
 def reverse(ip):
         if len(ip) <= 1:
                 return ip
@@ -167,7 +168,7 @@ class CssFSM(sonSMbase):
             LOG.error("Couldn't obtain IP address from VNFR")
             return
 
-        
+        # Post request
         url = "http://"+mgmt_ip+":8080/startPFbridge"
         querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\"}"}
 
@@ -175,14 +176,24 @@ class CssFSM(sonSMbase):
             'content-type': "application/x-www-form-urlencoded",
             'accept': "application/json",
             }
-        response = requests.request("POST", url, headers=headers, params=querystring)
-        LOG.info(response.text)
+
+        number_of_retries = 10
+        for i in range(number_of_retries):
+            LOG.info("Attempting new post request: attempt " + str(i + 1))
+            try:
+                response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+                LOG.info("Response on post request: " + str(response.text))
+                LOG.info("Status code of response " + str(response.status_code))
+                break
+            except:
+                LOG.info("Request timed out, retrying")
+                time.sleep(5)
 
         #Configure montoring probe
         sp_ip = '10.30.0.112'
         #if sp_ip:
         LOG.info('Mon Config: Create new conf file')
-        createConf(sp_ip, 4, 'vtc-vnf')
+        self.createConf(sp_ip, 4, 'vtc-vnf')
         ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
         ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
