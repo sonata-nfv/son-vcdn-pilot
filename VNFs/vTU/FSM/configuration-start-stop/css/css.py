@@ -160,11 +160,11 @@ class CssFSM(sonSMbase):
 #        sp_ip = content['service_platform_ip']
 
 #        if sp_ip:
-        ssh_client = Client(mgmt_ip,'sonata','s0nata',LOG, retries=10)
+        ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
         sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
         LOG.info("extracted sp_ip: " + str(sp_ip))
         LOG.info('Mon Config: Create new conf file')
-        createConf(sp_ip, 4, 'vcc-vnf')
+        self.createConf(sp_ip, 4, 'vcc-vnf')
         ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
