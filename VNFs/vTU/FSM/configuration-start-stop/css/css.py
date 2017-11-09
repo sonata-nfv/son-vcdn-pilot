@@ -28,6 +28,7 @@ partner consortium (www.sonata-nfv.eu).
 
 import logging
 import yaml
+import configparser
 from sonsmbase.smbase import sonSMbase
 from .ssh import Client
 
