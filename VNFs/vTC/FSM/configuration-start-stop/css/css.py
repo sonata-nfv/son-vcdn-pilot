@@ -188,7 +188,7 @@ class CssFSM(sonSMbase):
                 break
             except:
                 LOG.info("Request timed out, retrying")
-                time.sleep(5)
+                time.sleep(15)
 
         #Configure montoring probe
         sp_ip = '10.30.0.112'
