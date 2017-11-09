@@ -55,7 +55,7 @@ class Client(object):
             except (socket.error)  as  exception:
                 self.LOG.info("Mon Config:SHH: "+str(exception))
 
-            if connected:
+            if self.connected:
                 self.log.info("SSH connection established")
                 break
             else:
