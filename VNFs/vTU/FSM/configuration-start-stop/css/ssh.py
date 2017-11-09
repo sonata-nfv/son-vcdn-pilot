@@ -56,10 +56,10 @@ class Client(object):
                 self.LOG.info("Mon Config:SHH: "+str(exception))
 
             if self.connected:
-                self.log.info("SSH connection established")
+                self.LOG.info("SSH connection established")
                 break
             else:
-                self.log.info("SSH connection failed")
+                self.LOG.info("SSH connection failed")
                 time.sleep(5)
 
     def sendFile(self,file):
