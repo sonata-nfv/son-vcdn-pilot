@@ -178,7 +178,10 @@ class CssFSM(sonSMbase):
         LOG.info(response.text)
 
         #Configure montoring probe
-        sp_ip = content['service_platform_ip']
+        try:
+            sp_ip = content['service_platform_ip']
+        except eri as Exception:
+            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
         if sp_ip:
             LOG.info('Mon Config: Create new conf file')
@@ -212,18 +215,15 @@ class CssFSM(sonSMbase):
         # TODO: Add the stop logic. The content is a dictionary that contains
         # the required data
         # TODO = check vm_image if correct
-        vnfr = content['vnfr']
-        vm_image = "sonata-vtc"
-        for x in range(len(vnfr)):
-            if (content['VNFR'][x]['virtual_deployment_units']
-            [0]['vm_image']) == vm_image:
-                    mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
-                   [0]['vnfc_instance'][0]['connection_points'][0]
-                   ['type']['address'])
+        vm_image = "vtc-vnf"
+        vnfr = content["vnfr"]
+        if (content['vnfd']['name']) == vm_image:
+            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
 
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
+        
         url = "http://"+mgmt_ip+":8080/stopPFbridge"
 
         headers = {
@@ -250,7 +250,7 @@ class CssFSM(sonSMbase):
         # contains the required data
 
         nsr = content['nsr']
-        vnfrs = content['vnfrs']
+        vnfrs = content['vnfr']
 
         vtuIP = "10.100.32.214"  # TODO --- replace THIS. just a placeholder
         try:
@@ -263,7 +263,7 @@ class CssFSM(sonSMbase):
             return
 
         LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
-        ssh_client = Client(host_ip,user,pw,LOG)
+        ssh_client = Client(host_ip,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
         ssh_client.close()
         # Create a response for the FLM
