@@ -179,16 +179,12 @@ class CssFSM(sonSMbase):
         LOG.info(response.text)
 
         #Configure montoring probe
-        try:
-            sp_ip = content['service_platform_ip']
-        except eri as Exception:
-            LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
-
+        sp_ip = '10.30.0.112'
         #if sp_ip:
-        #LOG.info('Mon Config: Create new conf file')
-        #   createConf(sp_ip, 4, 'vtc-vnf')
+        LOG.info('Mon Config: Create new conf file')
+        createConf(sp_ip, 4, 'vtc-vnf')
         ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
-        #  ssh_client.sendFile('node.conf')
+        ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
         ssh_client.sendCommand('sudo service mon-probe restart')
