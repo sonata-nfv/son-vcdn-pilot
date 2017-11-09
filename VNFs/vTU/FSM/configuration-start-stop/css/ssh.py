@@ -44,7 +44,7 @@ class Client(object):
         for i in range(retries):
             self.LOG.info("Setting up SSH connection, attempt " + str(i + 1))
             try:
-                self.client.connect(address, username=username, password=password, look_for_keys=False, timeout=5)
+                self.client.connect(address, username=username, password=password, look_for_keys=False, timeout=10)
                 self.connected = True
             except (paramiko.BadHostKeyException) as  exception:
                 self.LOG.info("Mon Config:SSH: "+str(exception))
@@ -60,7 +60,7 @@ class Client(object):
                 break
             else:
                 self.LOG.info("SSH connection failed")
-                time.sleep(5)
+                time.sleep(10)
 
     def sendFile(self,file):
         if(self.client and self.connected):
