@@ -178,21 +178,24 @@ class CssFSM(sonSMbase):
         LOG.info(response.text)
 
         #Configure montoring probe
-        sp_ip = content['service_platform_ip']
-
-        if sp_ip:
-            LOG.info('Mon Config: Create new conf file')
-            createConf(sp_ip, 4, 'vtc-vnf')
-            ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
-            ssh_client.sendFile('node.conf')
-            ssh_client.sendCommand('ls /tmp/')
-            ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
-            ssh_client.sendCommand('sudo service mon-probe restart')
-            ssh_client.close()
-            LOG.info('Mon Config: Completed')
-
-        else:
+        try:
+            sp_ip = content['service_platform_ip']
+        except eri as Exception:
             LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
+
+        #if sp_ip:
+        #LOG.info('Mon Config: Create new conf file')
+        #   createConf(sp_ip, 4, 'vtc-vnf')
+        ssh_client = Client(mgmt_ip,'ubuntu','randompassword',LOG)
+        #  ssh_client.sendFile('node.conf')
+        ssh_client.sendCommand('ls /tmp/')
+        ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
+        ssh_client.sendCommand('sudo service mon-probe restart')
+        ssh_client.close()
+        LOG.info('Mon Config: Completed')
+
+        #else:
+         #   LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
 
         # Create a response for the FLM
@@ -212,18 +215,15 @@ class CssFSM(sonSMbase):
         # TODO: Add the stop logic. The content is a dictionary that contains
         # the required data
         # TODO = check vm_image if correct
-        vnfr = content['vnfr']
-        vm_image = "sonata-vtc"
-        for x in range(len(vnfr)):
-            if (content['VNFR'][x]['virtual_deployment_units']
-            [0]['vm_image']) == vm_image:
-                    mgmt_ip = (content['VNFR'][x]['virtual_deployment_units']
-                   [0]['vnfc_instance'][0]['connection_points'][0]
-                   ['type']['address'])
+        vm_image = "vtc-vnf"
+        vnfr = content["vnfr"]
+        if (content['vnfd']['name']) == vm_image:
+            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
 
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
+        
         url = "http://"+mgmt_ip+":8080/stopPFbridge"
 
         headers = {
@@ -263,7 +263,7 @@ class CssFSM(sonSMbase):
             return
 
         LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
-        ssh_client = Client(host_ip,user,pw,LOG)
+        ssh_client = Client(host_ip,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
         ssh_client.close()
         # Create a response for the FLM
