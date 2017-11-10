@@ -200,7 +200,7 @@ class CssFSM(sonSMbase):
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
         ssh_client.sendCommand('sudo service mon-probe restart')
-        ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d "http://"'+mgmt_ip+":8086" &')
+        ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d "http://"'+mgmt_ip+'":8086" &')
         ssh_client.sendCommand("sed -i 's/10.100.32.231/'"+mgmt_ip+"'/g' /root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json")
         ssh_client.close()
         LOG.info('Mon Config: Completed')
