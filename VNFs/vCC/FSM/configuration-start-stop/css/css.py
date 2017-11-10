@@ -175,6 +175,8 @@ class CssFSM(sonSMbase):
             ssh_client.sendCommand('ls /tmp/')
             ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
             ssh_client.sendCommand('sudo service mon-probe restart')
+            ssh_client.sendCommand('ip="$(ifconfig | grep -A 1 \'eth0\' | tail -1 | cut -d \':\' -f 2 | cut -d \' \' -f 1)"')
+            ssh_client.sendCommand('sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to $ip:3128')
             ssh_client.close()
             LOG.info('Mon Config: Completed')
         else:
