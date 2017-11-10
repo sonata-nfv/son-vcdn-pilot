@@ -181,6 +181,13 @@ class CssFSM(sonSMbase):
         # else:
         #     LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
+        #Configuring vTU docker container
+        LOG.info('vTU Start: Start the vTU docker container')
+        ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
+        command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(mgmt_ip)
+        ssh_client.sendCommand(command)
+        ssh_client.sendCommand('docker-compose up -d')
+        
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
