@@ -62,6 +62,7 @@ class Client(object):
 
 
     def sendCommand(self, command):
+        self.LOG.info("Mon Config:SSH:Incoming command: "+command)
         if(self.client and self.connected):
             stdin, stdout, stderr = self.client.exec_command(command)
             while not stdout.channel.exit_status_ready():
@@ -72,11 +73,11 @@ class Client(object):
                     while prevdata:
                         prevdata = stdout.channel.recv(1024)
                         alldata += prevdata
-                    self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata)+"}")
+                    self.LOG.info("Mon Config:SSH:{cmd:"+command+",output:"+str(alldata)+"}")
                     return str(alldata)
                 
         else:
-            self.LOG.info("Mon Config:SHH:"+command+" aborted.")
+            self.LOG.info("Mon Config:SSH:"+command+" aborted.")
 
     
     def close(self):
