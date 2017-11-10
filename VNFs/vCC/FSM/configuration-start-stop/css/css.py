@@ -166,7 +166,7 @@ class CssFSM(sonSMbase):
 #        sp_ip = content['service_platform_ip']
         sp_ip = '10.30.0.112'
         if sp_ip:
-            ssh_client = Client(mgmt_ip,'ubuntu','s0nata',LOG)
+            ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
             #sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
             #LOG.info("extracted sp_ip: " + str(sp_ip))
             LOG.info('Mon Config: Create new conf file')
@@ -175,6 +175,8 @@ class CssFSM(sonSMbase):
             ssh_client.sendCommand('ls /tmp/')
             ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
             ssh_client.sendCommand('sudo service mon-probe restart')
+            ssh_client.sendCommand('ip="$(ifconfig | grep -A 1 \'eth0\' | tail -1 | cut -d \':\' -f 2 | cut -d \' \' -f 1)"')
+            ssh_client.sendCommand('sudo iptables -t nat -A PREROUTING -p tcp --dport 8080 -j DNAT --to $ip:3128')
             ssh_client.close()
             LOG.info('Mon Config: Completed')
         else:
