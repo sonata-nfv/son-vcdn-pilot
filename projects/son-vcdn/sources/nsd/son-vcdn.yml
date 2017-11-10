@@ -22,8 +22,7 @@ vendor: "eu.sonata-nfv.service-descriptor"
 name: "sonata-vcdn"
 version: "0.9"
 author: "SONATA Consortium"
-description: >
-  "Content Delivery Network pilot"
+description: "Content Delivery Network pilot"
 ##
 ## The various network functions this service
 ## is composed of.
