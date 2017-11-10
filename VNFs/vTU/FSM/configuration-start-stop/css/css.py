@@ -187,7 +187,8 @@ class CssFSM(sonSMbase):
         command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(mgmt_ip)
         ssh_client.sendCommand(command)
         ssh_client.sendCommand('docker-compose up -d')
-        
+        ssh_client.close()
+        LOG.info('vTU Service Config: Completed')
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
