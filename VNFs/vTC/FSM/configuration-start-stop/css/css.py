@@ -205,9 +205,8 @@ class CssFSM(sonSMbase):
         ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d "http://"'+mgmt_ip+'":8086" &')
         LOG.info("Started pfbridge (if it was not)")
         ssh_client.sendCommand("sed -i 's/10.100.32.231/'"+mgmt_ip+"'/g' /root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json")
-        ssh_client.sendCommand('sudo cd /root/gowork/src/vtc_dashboard/static/json')
         LOG.info("Updating datasource")
-        ssh_client.sendCommand("curl -X PUT --connect-timeout 60 --data-binary @grafana_init_datasources.json -H 'Content-Type:application/json' -H 'Accept: application/json' http://admin:admin@"+mgmt_ip+":3000/api/datasources/15")
+        ssh_client.sendCommand("sudo curl -X PUT --connect-timeout 60 --data-binary @/root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json -H 'Content-Type:application/json' -H 'Accept: application/json' http://admin:admin@"+mgmt_ip+":3000/api/datasources/15")
         ssh_client.close()
         LOG.info('Configurations completed')
 
