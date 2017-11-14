@@ -1,0 +1,91 @@
+##
+## vCC VNF descriptor.
+##
+descriptor_version: "vnfd-schema-02"
+vendor: "eu.sonata-nfv"
+name: "vcc-vnf"
+version: "0.1"
+author: "Stavros Kolometsos @ Demokritos"
+description: "VNF implementing a vCacheContent"
+##
+## The virtual deployment unit.
+##
+virtual_deployment_units:
+  - id: "1"
+    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vcc-vnf/sonata-vcc.qcow2"
+    vm_image_format: "qcow2"
+    vm_image_md5: '13e8768cb856508b6cbdd8abcaef05be'
+    resource_requirements:
+      cpu:
+        vcpus: 1
+      memory:
+        size: 2
+        size_unit: "GB"
+      storage:
+        size: 20
+        size_unit: "GB"
+    monitoring_parameters:
+      - name: "vm_cpu_perc"
+        unit: "Percentage"
+      - name: "vm_mem_perc"
+        unit: "Percentage"
+      - name: "vm_net_rx_bps"
+        unit: "bps"
+      - name: "vm_net_tx_bps"
+        unit: "bps"
+    connection_points:
+      - id: "cpeth0"
+        interface: "ipv4"
+        type: "management"
+      - id: "input"
+        interface: "ipv4"
+        type: "internal"
+        
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "vlmgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "1:cpeth0"
+      - "cpmgmt"
+  - id: "vlinput"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "1:input"
+      - "cpinput"
+
+##
+## The VNF connection points to the 
+## outside world.
+##
+connection_points:
+  - id: "cpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "cpinput"
+    interface: "ipv4"
+    type: "internal"
+##
+
+monitoring_rules:
+  - name: "mon:rule:vm_cpu_usage_85_perc"
+    description: "Trigger events if CPU load is above 85 percent."
+    duration: 10
+    duration_unit: "s"
+    condition: "1:vm_cpu_perc > 85"
+    notification:
+      - name: "notification01"
+        type: "rabbitmq_message"
+
+##
+## Function Specific Managers
+##
+function_specific_managers:
+  - id: "sonfsmvcdnvcccss1"
+    description: "FSM to do a first FSM test"
+    image: "sonatanfv/vcdn-vcc-fsm-css"
+    options:
+      - key: "type"
+        value: "start"

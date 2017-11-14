@@ -19,10 +19,10 @@
 descriptor_version: "1.0"
 
 vendor: "eu.sonata-nfv.service-descriptor"
-name: "sonata-vcdn"
+name: "sonata-vcdn-ssm"
 version: "0.9"
 author: "SONATA Consortium"
-description: "Content Delivery Network pilot"
+description: "Content Delivery Network pilot with SSM"
 ##
 ## The various network functions this service
 ## is composed of.
@@ -43,17 +43,17 @@ network_functions:
 
 
 # Service specific Managers
-# service_specific_managers:
-#  - id: "sonssmvcdntask-config-monitor1"
-#    description: "An SSM functioning as task, config and monitor SSM."
-#    image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
-#    options:
-#      - key: "type"
-#        value: "task"
-#      - key: "type"
-#        value: "configure"
-#      - key: "type"
-#        value: "monitor"
+service_specific_managers:
+ - id: "sonssmvcdntask-config-monitor1"
+   description: "An SSM functioning as task, config and monitor SSM."
+   image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
+   options:
+     - key: "type"
+       value: "task"
+     - key: "type"
+       value: "configure"
+     - key: "type"
+       value: "monitor"
 
 
 ##

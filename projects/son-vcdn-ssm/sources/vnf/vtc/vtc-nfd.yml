@@ -1,0 +1,138 @@
+##
+## vTC VNF descriptor.
+##
+descriptor_version: "vnfd-schema-02"
+vendor: "eu.sonata-nfv"
+name: "vtc-vnf"
+version: "0.1"
+author: "George Xilouris, Stavros Kolometsos :@ NCSRD"
+description: "VNF implementing a vTC for traffic inspection and classification"
+##
+## The virtual deployment unit.
+##
+virtual_deployment_units:
+  - id: "vdu01"
+    vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtc-vnf/sonata-vtc.qcow2"
+    vm_image_format: "qcow2"
+    vm_image_md5: '3dfea8193ec406ee028d6ecefa3bd424'
+    resource_requirements:
+      cpu:
+        vcpus: 2
+      memory:
+        size: 4
+        size_unit: "GB"
+      storage:
+        size: 30
+        size_unit: "GB"
+    monitoring_parameters:
+      - name: "vm_cpu_perc"
+        unit: "Percentage"
+      - name: "vm_mem_perc"
+        unit: "Percentage"
+      - name: "vm_net_rx_bps"
+        unit: "bps"
+      - name: "vm_net_tx_bps"
+        unit: "bps"
+      - name: "mbits_packets_all"
+        unit: "bps"
+      - name: "mbits_packets_apple"
+        unit: "bps" 
+      - name: "mbits_packets_bittorrent"
+        unit: "bps"
+      - name: "mbits_packets_dns"
+        unit: "bps"
+      - name: "mbits_packets_dropbox"
+        unit: "bps"
+      - name: "mbits_packets_google"
+        unit: "bps"
+      - name: "mbits_packets_http"
+        unit: "bps" 
+      - name: "mbits_packets_icloud"
+        unit: "bps" 
+      - name: "mbits_packets_skype"
+        unit: "bps" 
+      - name: "mbits_packets_twitter"
+        unit: "bps"
+      - name: "mbits_packets_viber"
+        unit: "bps"
+      - name: "mbits_packets_youtube"
+        unit: "bps"
+    
+
+    connection_points:
+      - id: "eth0"
+        interface: "ipv4"
+        type: "management"
+      - id: "input"
+        interface: "ipv4"
+        type: "internal"
+      - id: "output"
+        interface: "ipv4"
+        type: "internal"
+ 
+##
+## The VNF connection points to the 
+## outside world.
+##
+connection_points:
+  - id: "cpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "cpinput"
+    interface: "ipv4"
+    type: "external"
+  - id: "cpoutput"
+    interface: "ipv4"
+    type: "external"
+
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "mgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vdu01:eth0"
+      - "cpmgmt"
+  - id: "input"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:input"
+      - "cpinput"
+  - id: "output"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vdu01:output"
+      - "cpoutput"
+ 
+
+
+monitoring_rules:
+  - name: "mon:rule:mbits_packets_all"
+    description: "Trigger events if network load is greater than 1500."
+    duration: 10
+    duration_unit: "s"
+    condition: "vdu01:mbits_packets_all > 1500"
+    notification:
+      - name: "notification01"
+        type: "rabbitmq_message"
+  - name: "mon:rule:mbits_packets_http"
+    description: "Trigger events if HTTP load is more than 10000."
+    duration: 10
+    duration_unit: "s"
+    condition: "vdu01:mbits_packets_http > 10000"
+    notification:
+      - name: "notification02"
+        type: "rabbitmq_message"
+##
+## Function Specific Managers
+##
+function_specific_managers:
+  - id: "sonfsmvcdnvtccss1"
+    description: "FSM to do a first FSM test"
+    image: "sonatanfv/vcdn-vtc-fsm-css"
+    options:
+      - key: "type"
+        value: "start"
