@@ -37,7 +37,7 @@ virtual_deployment_units:
       - id: "cpeth0"
         interface: "ipv4"
         type: "management"
-      - id: "cpeth1"
+      - id: "input"
         interface: "ipv4"
         type: "internal"
         
@@ -53,7 +53,7 @@ virtual_links:
   - id: "vlinput"
     connectivity_type: "E-Line"
     connection_points_reference:
-      - "1:cpeth1"
+      - "1:input"
       - "cpinput"
 
 ##
