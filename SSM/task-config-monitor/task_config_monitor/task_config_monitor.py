@@ -121,8 +121,8 @@ class TaskConfigMonitorSSM(sonSMbase):
         # Update the received schedule
         schedule = content['schedule']
 
-        schedule.insert(6, 'vnfs_config')
-        schedule.insert(6, 'configure_ssm')
+        schedule.insert(7, 'vnfs_config')
+        schedule.insert(7, 'configure_ssm')
 
         response = {'schedule': schedule, 'status': 'COMPLETED'}
 
