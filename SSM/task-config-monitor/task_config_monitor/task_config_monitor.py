@@ -121,8 +121,8 @@ class TaskConfigMonitorSSM(sonSMbase):
         # Update the received schedule
         schedule = content['schedule']
 
-        schedule.insert(5, 'vnfs_config')
-        schedule.insert(5, 'configure_ssm')
+        schedule.insert(6, 'vnfs_config')
+        schedule.insert(6, 'configure_ssm')
 
         response = {'schedule': schedule, 'status': 'COMPLETED'}
 
@@ -160,8 +160,13 @@ class TaskConfigMonitorSSM(sonSMbase):
         for vnf in content['functions']:
             new_entry = {}
             new_entry['id'] = vnf['id']
-            new_entry['start'] = {'trigger': True,
-                                  'payload': {}}
+            if vnf['vnfd']['name'] == 'vtc-vnf':
+                new_entry['start'] = {'trigger': True,
+                                      'payload': {}}
+            else:
+                new_entry['start'] = {'trigger': False,
+                                      'payload': {}}
+
             response['vnf'].append(new_entry)
 
         LOG.info("Generated response: " + str(response))

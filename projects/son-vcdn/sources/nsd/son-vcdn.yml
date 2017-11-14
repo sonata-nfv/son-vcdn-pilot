@@ -42,18 +42,18 @@ network_functions:
     vnf_version: "0.1"
 
 
-## Service specific Managers
-# service_specific_managers:
-#  - id: "sonssmvcdntask-config-monitor1"
-#    description: "An SSM functioning as task, config and monitor SSM."
-#    image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
-#    options:
-#      - key: "type"
-#        value: "task"
-#      - key: "type"
-#        value: "configure"
-#      - key: "type"
-#        value: "monitor"
+# Service specific Managers
+service_specific_managers:
+ - id: "sonssmvcdntask-config-monitor1"
+   description: "An SSM functioning as task, config and monitor SSM."
+   image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
+   options:
+     - key: "type"
+       value: "task"
+     - key: "type"
+       value: "configure"
+     - key: "type"
+       value: "monitor"
 
 
 ##
