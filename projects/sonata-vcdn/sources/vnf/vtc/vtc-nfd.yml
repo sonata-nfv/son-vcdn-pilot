@@ -65,10 +65,10 @@ virtual_deployment_units:
         type: "management"
       - id: "cpinput"
         interface: "ipv4"
-        type: "internal"
+        type: "input"
       - id: "cpoutput"
         interface: "ipv4"
-        type: "internal"
+        type: "output"
  
 ##
 ## The VNF connection points to the 
