@@ -107,6 +107,18 @@ virtual_links:
       - "vdu01:output"
       - "cpoutput"
  
+##
+## Function Specific Managers
+##
+function_specific_managers:
+  - id: "sonfsmvcdnvtccss1"
+    description: "FSM to do a first FSM test"
+    image: "sonatanfv/vcdn-vtc-fsm-css"
+    options:
+      - key: "type"
+        value: "start"
+      - key: "type"
+        value: "configure"
 
 
 monitoring_rules:
@@ -126,15 +138,3 @@ monitoring_rules:
     notification:
       - name: "notification02"
         type: "rabbitmq_message"
-##
-## Function Specific Managers
-##
-function_specific_managers:
-  - id: "sonfsmvcdnvtccss1"
-    description: "FSM to do a first FSM test"
-    image: "sonatanfv/vcdn-vtc-fsm-css"
-    options:
-      - key: "type"
-        value: "start"
-      - key: "type"
-        value: "configure"
