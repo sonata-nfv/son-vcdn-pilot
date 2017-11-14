@@ -161,11 +161,11 @@ class TaskConfigMonitorSSM(sonSMbase):
             new_entry = {}
             new_entry['id'] = vnf['id']
             if vnf['vnfd']['name'] == 'vtc-vnf':
-                new_entry['start'] = {'trigger': True,
-                                      'payload': {}}
+                new_entry['configure'] = {'trigger': True,
+                                          'payload': {}}
             else:
-                new_entry['start'] = {'trigger': False,
-                                      'payload': {}}
+                new_entry['configure'] = {'trigger': False,
+                                          'payload': {}}
 
             response['vnf'].append(new_entry)
 
