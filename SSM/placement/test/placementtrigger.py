@@ -70,8 +70,9 @@ class fakealert(object):
                     32, "memory_used": 12,"core_total": 43, "core_used": 23}, {"vim_uuid": "1235","vim_city": "Aveiro","vim_name": "abcd", "vim_endpoint": "12", "memory_total":
                     50, "memory_used": 10,"core_total": 65, "core_used": 30}]
 
-        nap = {'ingress':[{"location":'Athens',"nap":''}],'egress':[{"location":'Athens',"nap":''}]}
+        nap = {'ingress':[{"location":'Athens',"nap":''}],'egress':[{"location":'Aveiro',"nap":''}]}
 
+        #nap = {'ingress': [{"location": '', "nap": ''}], 'egress': [{"location": '', "nap": ''}]}
         vnfds = [vnfd1,vnfd2,vnfd3]
 
         nsd = {}
