@@ -49,7 +49,8 @@ logging.getLogger("son-mano-base:messaging").setLevel(logging.INFO)
 
 
 class CssFSM(sonSMbase):
-
+    
+    hostIp = 'none'
     def __init__(self):
 
         """
@@ -164,11 +165,12 @@ class CssFSM(sonSMbase):
         if (content['vnfd']['name']) == vm_image:
             mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
 
-
+        
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
-
+        self.hostIp = mgmt_ip
+        
         # Post request
         url = "http://"+mgmt_ip+":8080/startPFbridge"
         querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\"}"}
@@ -282,7 +284,7 @@ class CssFSM(sonSMbase):
             return
 
         LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
-        ssh_client = Client(host_ip,'ubuntu','randompassword',LOG)
+        ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
         ssh_client.close()
         # Create a response for the FLM
