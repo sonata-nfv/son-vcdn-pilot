@@ -267,15 +267,18 @@ class CssFSM(sonSMbase):
 
         nsr = content['nsr']
         vnfrs = content['vnfrs']
+        for vnfr in vnfrs:
+            if (vnfr['virtual_deployment_units'][0]['vm_image']) == 'http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2':
+                mgmt_ip = vnfr['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
+                LOG.info("vTU's management IP retrieved: "+mgt_ip)
 
-        vtuIP = "10.100.32.214"  # TODO --- replace THIS. just a placeholder
         try:
             iprev = reverse(vtuIP)
             LOG.info("Got the reverse IP to be turned to integer: "+iprev)
             ipInt = int(netaddr.IPAddress(iprev))
-            LOG.info("Got the Integer from the IP: "+ipInt)
+            LOG.info("Got the Integer from the IP: "+str(ipInt))
         except Exception as err: 
-            LOG.error("Got an exception: "+err)
+            LOG.error("Got an exception: "+str(err))
             return
 
         LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
