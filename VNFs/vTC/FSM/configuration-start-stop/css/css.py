@@ -270,10 +270,10 @@ class CssFSM(sonSMbase):
         for vnfr in vnfrs:
             if (vnfr['virtual_deployment_units'][0]['vm_image']) == 'http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2':
                 mgmt_ip = vnfr['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
-                LOG.info("vTU's management IP retrieved: "+mgt_ip)
+                LOG.info("vTU's management IP retrieved: "+mgmt_ip)
 
         try:
-            iprev = reverse(vtuIP)
+            iprev = reverse(mgmt_ip)
             LOG.info("Got the reverse IP to be turned to integer: "+iprev)
             ipInt = int(netaddr.IPAddress(iprev))
             LOG.info("Got the Integer from the IP: "+str(ipInt))
