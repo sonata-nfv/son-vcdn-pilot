@@ -4,7 +4,7 @@
 descriptor_version: "vnfd-schema-02"
 vendor: "eu.sonata-nfv"
 name: "vtc-vnf"
-version: "0.1"
+version: "0.2"
 author: "George Xilouris, Stavros Kolometsos :@ NCSRD"
 description: "VNF implementing a vTC for traffic inspection and classification"
 ##
