@@ -287,6 +287,29 @@ class CssFSM(sonSMbase):
         ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
         ssh_client.close()
+        
+        #Stopping PFBRidge
+        url = "http://"+self.hostIp+":8080/stopPFbridge"
+        headers = {
+            'accept': "application/json",
+            }
+        response = requests.request("POST", url, headers=headers)
+        LOG.info("Response on post request: " + str(response.text))
+        LOG.info("Status code of response " + str(response.status_code))
+        
+        #Starting PFBridge agan
+        url = "http://"+self.hostIp+":8080/startPFbridge"
+        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\"}"}
+        headers = {
+            'content-type': "application/x-www-form-urlencoded",
+            'accept': "application/json",
+            }
+
+         response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+         LOG.info("Response on post request: " + str(response.text))
+         LOG.info("Status code of response " + str(response.status_code))
+     
+        
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
