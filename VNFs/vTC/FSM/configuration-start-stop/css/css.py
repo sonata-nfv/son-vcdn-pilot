@@ -305,11 +305,10 @@ class CssFSM(sonSMbase):
             'accept': "application/json",
             }
 
-         response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
-         LOG.info("Response on post request: " + str(response.text))
-         LOG.info("Status code of response " + str(response.status_code))
-     
-        
+        response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+        LOG.info("Response on post request: " + str(response.text))
+        LOG.info("Status code of response " + str(response.status_code))
+
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
