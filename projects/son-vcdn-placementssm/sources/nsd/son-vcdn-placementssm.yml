@@ -1,0 +1,176 @@
+#
+# This is the NSD of SONATA's vCDN pilot (version including vTU)
+#
+# @author SONATA
+# date:2.11.2017
+# Notes: This NSD does not depend on the type of the VNFs (i.e. L2/L3) thus it constructs the paths 
+# being type unaware. 
+# Chain 1(user): user->cpinput->vTC_in->vTC_out->vCC_in->vCC_in->cpoutput->server
+# Chain 1(server): server->cpinput->vCC_in (L3)->vCC_in -> cpoutput -> user
+# Chain 2(user): user->cpinput->vTC_in->vTC_out->vTU_in (--> the file is created on the server on the mounted disk - NFS outside of the graph)
+# Chain 2 (server) the same with Chain #1(server) 
+# NOTE: vTC -> vCC and vTC -> vTU are L3, the decision and steering is performed at the vTC. In this view the actual vTC2vCC and vTC2vTU virtual links
+# do not need to appear in the forwarding paths 
+# this makes the chains simpler (testing will be required) 
+# Chain 1(user) user->cpinput->vTC_in->vTC_out->cpoutput (to server or to vTU)
+# Chain 2(server) server->cpinput->vTC_in->vTC_out->cpoutput 
+# from the above it can be deducted that it can be a single chain that can be fixed for the whole service ! 
+---
+descriptor_version: "1.0"
+
+vendor: "eu.sonata-nfv.service-descriptor"
+name: "sonata-vcdn-placementssm"
+version: "0.9.1"
+author: "SONATA Consortium"
+description: "Content Delivery Network pilot with placement SSM"
+##
+## The various network functions this service
+## is composed of.
+##
+network_functions:
+  - vnf_id: "vnf_vtc"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "vtc-vnf"
+    vnf_version: "0.2"
+  - vnf_id: "vnf_vcc"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "vcc-vnf"
+    vnf_version: "0.1"
+  - vnf_id: "vnf_vtu"
+    vnf_vendor: "eu.sonata-nfv"
+    vnf_name: "vtu-vnf"
+    vnf_version: "0.1"
+
+
+# Service specific Managers
+service_specific_managers:
+ - id: "sonssmvcdntask-config-monitor1"
+   description: "An SSM functioning as task, config and monitor SSM."
+   image: "sonatanfv/vcdn-ssm-taskconfigmonitor"
+   options:
+     - key: "type"
+       value: "task"
+     - key: "type"
+       value: "configure"
+     - key: "type"
+       value: "monitor"
+ - id: "sonssmvcdnplacement1"
+   description: "placement SSM."
+   image: "sonatanfv/vcdn-ssm-placement"
+   options:
+     - key: "type"
+       value: "placement"
+
+
+##
+## The NS connection points to the
+## outside world.
+##
+connection_points:
+  - id: "nscpmgmt"
+    interface: "ipv4"
+    type: "management"
+  - id: "nscpinput"
+    interface: "ipv4"
+    type: "external"
+  - id: "nscpoutput"
+    interface: "ipv4"
+    type: "external"
+
+##
+## The virtual links that interconnect
+## the different connections points.
+##
+virtual_links:
+  - id: "vlmgmt"
+    connectivity_type: "E-LAN"
+    connection_points_reference:
+      - "vnf_vtc:cpmgmt"
+      - "vnf_vcc:cpmgmt"
+      - "vnf_vtu:cpmgmt"  
+      - "nscpmgmt"
+  - id: "vlinput"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "nscpinput"
+      - "vnf_vtc:cpinput"
+#      - "vnf_vcc:cpinput" # this should be here however it will brake the NSD - we need to modify 
+  - id: "vtc-2-vcc"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf_vtc:cpoutput"
+      - "vnf_vcc:cpinput"
+  - id: "vtc-2-vtu"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf_vtc:cpoutput"
+      - "vnf_vtu:cpinput"
+  - id: "vlvtcout"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf_vtc:cpinput"
+      - "nscpoutput"
+  - id: "vlvccout"
+    connectivity_type: "E-Line"
+    connection_points_reference:
+      - "vnf_vcc:cpinput"
+      - "nscpoutput"
+
+##
+## The forwarding graphs.
+##
+
+
+forwarding_graphs:
+  - fg_id: "ns:fg01" 
+    number_of_endpoints: 2
+    number_of_virtual_links: 3
+    constituent_vnfs:
+      - "vnf_vtc"
+      - "vnf_vcc"
+      - "vnf_vtu"
+    constituent_virtual_links: 
+      - "vlinput" #the input to the NS (since it is a L3 redirection to the vTU may not be required in the definition.
+      - "vtc-chain"
+      - "vlout"
+    network_forwarding_paths:
+      - fp_id: "ns:fg01:fp01" # Incoming User Requests (for service) vtc-vcc plus the 
+        policy: "none"
+        connection_points:
+          - connection_point_ref: "nscpinput"
+            position: 1
+          - connection_point_ref: "vnf_vtc:cpinput"
+            position: 2
+          - connection_point_ref: "vnf_vtc:cpoutput"
+            position: 3
+          - connection_point_ref: "vnf_vcc:cpinput"
+            position: 4 
+          - connection_point_ref: "vnf_vcc:cpinput"
+            position: 5
+          - connection_point_ref: "nscpoutput"
+            position: 6
+  - fg_id: "ns:fg02" 
+    number_of_endpoints: 2
+    number_of_virtual_links: 3
+    constituent_vnfs:
+      - "vnf_vtc"
+      - "vnf_vtu"
+    constituent_virtual_links: 
+      - "vtc-chain"
+    network_forwarding_paths:
+      - fp_id: "ns:fg02:fp01" # Incoming User Requests (transcoding) (vtc-vtu)
+        policy: "none"
+        connection_points:
+          - connection_point_ref: "nscpinput"
+            position: 1
+          - connection_point_ref: "vnf_vtc:cpinput"
+            position: 2
+          - connection_point_ref: "vnf_vtc:cpoutput"
+            position: 3
+          - connection_point_ref: "vnf_vtu:cpinput"
+            position: 4
+
+
+#NOTE from the ETSI document: When no Network Forwarding Paths element is 
+#included in a VNF Forwarding Graph descriptor, the forwarding path applicable to a traffic flow is decided at runtime (e.g. routeing of signalling messages 
+#across call servers). 
