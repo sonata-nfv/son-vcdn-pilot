@@ -89,6 +89,7 @@ class PlacementSSM(sonSMbase):
 
         LOG.info("Placement started")
         message = yaml.load(payload)
+        LOG.info('payload content => {0}'.format(message))
         topology = message['topology']
         nsd = message['nsd']
         functions = message['vnfds']
