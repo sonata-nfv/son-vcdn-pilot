@@ -136,8 +136,11 @@ class PlacementSSM(sonSMbase):
         # Find the sum of demands of vCC and vTC
         vtc_vcc_total_core = 0
         vtc_vcc_total_memory = 0
+
+
+
         for vnfd in functions:
-            if vnfd['intance_uuid'] == 'vtc-vnf' or vnfd['intance_uuid'] == 'vcc-vnf':
+            if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
                 vtc_vcc_total_core += vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu']['vcpus']
                 vtc_vcc_total_memory += vnfd['virtual_deployment_units'][0]['resource_requirements']['memory']['size']
 
@@ -146,7 +149,7 @@ class PlacementSSM(sonSMbase):
         vtu_total_core = 0
         vtu_total_memory = 0
         for vnfd in functions:
-            if vnfd['intance_uuid'] == 'vtu-vnf':
+            if vnfd['name'] == 'vtu-vnf':
                 vtu_total_core = vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu']['vcpus']
                 vtu_total_memory = vnfd['virtual_deployment_units'][0]['resource_requirements']['memory']['size']
 
@@ -158,9 +161,9 @@ class PlacementSSM(sonSMbase):
                         cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                         mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                         if cpu_req and mem_req:
-                            LOG.debug('VNF ' + vnfd['intance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
-                            mapping[vnfd['intance_uuid']] = {}
-                            mapping[vnfd['intance_uuid']]['vim'] = vim['vim_uuid']
+                            LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                            mapping[vnfd['instance_uuid']] = {}
+                            mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                             vim['core_used'] = vim['core_used'] + \
                                                vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu'][
                                                    'vcpus']
@@ -176,9 +179,9 @@ class PlacementSSM(sonSMbase):
                         mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
                         if cpu_req and mem_req:
-                            LOG.debug('VNF ' + vnfd['intance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
-                            mapping[vnfd['intance_uuid']] = {}
-                            mapping[vnfd['intance_uuid']]['vim'] = vim['vim_uuid']
+                            LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                            mapping[vnfd['instance_uuid']] = {}
+                            mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                             vim['core_used'] = vim['core_used'] + \
                                                vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu'][
                                                    'vcpus']
@@ -197,9 +200,9 @@ class PlacementSSM(sonSMbase):
                             cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                             mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                             if cpu_req and mem_req:
-                                LOG.debug('VNF ' + vnfd['intance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
-                                mapping[vnfd['intance_uuid']] = {}
-                                mapping[vnfd['intance_uuid']]['vim'] = vim['vim_uuid']
+                                LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                mapping[vnfd['instance_uuid']] = {}
+                                mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                 vim['core_used'] = vim['core_used'] + \
                                                    vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu'][
                                                        'vcpus']
@@ -215,9 +218,9 @@ class PlacementSSM(sonSMbase):
                             mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
                             if cpu_req and mem_req:
-                                LOG.debug('VNF ' + vnfd['intance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
-                                mapping[vnfd['intance_uuid']] = {}
-                                mapping[vnfd['intance_uuid']]['vim'] = vim['vim_uuid']
+                                LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                mapping[vnfd['instance_uuid']] = {}
+                                mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                 vim['core_used'] = vim['core_used'] + \
                                                    vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu'][
                                                        'vcpus']
