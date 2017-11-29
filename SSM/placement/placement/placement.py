@@ -156,8 +156,8 @@ class PlacementSSM(sonSMbase):
             if vnfd['name'] == 'vtu-vnf':
                 vtu_total_core = vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu']['vcpus']
                 vtu_total_memory = vnfd['virtual_deployment_units'][0]['resource_requirements']['memory']['size']
- 
-        if nap is not {}:
+
+        if bool(nap):
             # Place vTC and vCC on the Egress PoP close to users and
             # place vTU on Ingress PoP close to the server
             for vnfd in functions:
