@@ -130,8 +130,8 @@ class PlacementSSM(sonSMbase):
 
 
         if nap != {}:
-            ingress = nap['ingress'][0]['location']
-            egress = nap['egress'][0]['location']
+            ingress = nap['ingresses'][0]['location']
+            egress = nap['egresses'][0]['location']
 
         # Find the sum of demands of vCC and vTC
         vtc_vcc_total_core = 0
