@@ -128,8 +128,10 @@ class PlacementSSM(sonSMbase):
         LOG.info("Mapping algorithm started.")
         mapping = {}
 
-        ingress = nap['ingress'][0]['location']
-        egress = nap['egress'][0]['location']
+
+        if nap != {}:
+            ingress = nap['ingress'][0]['location']
+            egress = nap['egress'][0]['location']
 
         # Find the sum of demands of vCC and vTC
         vtc_vcc_total_core = 0
@@ -148,7 +150,7 @@ class PlacementSSM(sonSMbase):
                 vtu_total_core = vnfd['virtual_deployment_units'][0]['resource_requirements']['cpu']['vcpus']
                 vtu_total_memory = vnfd['virtual_deployment_units'][0]['resource_requirements']['memory']['size']
 
-        if ingress == "" and egress == "":
+        if nap == {}:
 
             for vnfd in functions:
                 if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
