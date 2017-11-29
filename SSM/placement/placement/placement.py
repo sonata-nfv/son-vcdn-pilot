@@ -201,7 +201,7 @@ class PlacementSSM(sonSMbase):
         if (nap == {}) or (len(mapping) is not len(functions)):
 
             for vnfd in functions:
-                if vnfd['instance_uuid'] is not in mapping.keys():
+                if vnfd['instance_uuid'] not in mapping.keys():
                     if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
                         for vim in topology:
                             cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
