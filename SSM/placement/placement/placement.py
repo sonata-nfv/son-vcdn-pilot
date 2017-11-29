@@ -202,7 +202,7 @@ class PlacementSSM(sonSMbase):
                                                              'size']
                                     break
 
-        if (len(mapping) is not len(functions):
+        if len(mapping) is not len(functions):
 
             for vnfd in functions:
                 if vnfd['instance_uuid'] not in mapping.keys():
