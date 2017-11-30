@@ -14,7 +14,7 @@ virtual_deployment_units:
   - id: "1"
     vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vcc-vnf/sonata-vcc.qcow2"
     vm_image_format: "qcow2"
-    vm_image_md5: '13e8768cb856508b6cbdd8abcaef05be'
+    vm_image_md5: 'f1b74b626f6be8be9f957d2f5164327b'
     resource_requirements:
       cpu:
         vcpus: 1
