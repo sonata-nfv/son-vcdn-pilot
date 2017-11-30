@@ -186,7 +186,7 @@ class PlacementSSM(sonSMbase):
                     if vnfd['name'] == 'vtu-vnf':
                         for vim in topology:
                             vim_ip_segments = vim['vim_endpoint'].split('.')
-                            if vim_ip_segments[:-1] == egress_ip_segments[:-1]:
+                            if (vim_ip_segments[:-2] == egress_ip_segments[:-2]) and (egress_ip_segments[2] in ['0', '16']):
                                 cpu_req = vtu_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
