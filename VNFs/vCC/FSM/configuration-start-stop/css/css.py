@@ -154,7 +154,7 @@ class CssFSM(sonSMbase):
         vm_image = "vcc-vnf"
         vnfr = content["vnfr"]
         if (content['vnfd']['name']) == vm_image:
-            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
+            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'][0]['connection_points'][0]['interface']['address']
 
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
