@@ -237,7 +237,6 @@ class CssFSM(sonSMbase):
         vnfr = content["vnfr"]
         if (content['vnfd']['name']) == vm_image:
             mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
-
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
@@ -272,7 +271,8 @@ class CssFSM(sonSMbase):
         for vnfr in vnfrs:
             if (vnfr['virtual_deployment_units'][0]['vm_image']) == 'http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2':
                 mgmt_ip = vnfr['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
-                LOG.info("vTU's management IP retrieved: "+mgmt_ip)
+                mac = vnfr['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['hardware_address']
+                LOG.info("vTU's management IP retrieved: "+mgmt_ip+" and the mac:"+mac)
 
         try:
             iprev = reverse(mgmt_ip)
