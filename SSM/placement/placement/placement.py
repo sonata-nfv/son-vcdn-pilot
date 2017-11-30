@@ -163,11 +163,11 @@ class PlacementSSM(sonSMbase):
             # Place vTC and vCC on the Egress PoP close to users and
             # place vTU on Ingress PoP close to the server
             for vnfd in functions:
-                if 'egresses' in nap.keys():
+                if 'ingresses' in nap.keys():
                     if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
                         for vim in topology:
                             vim_ip_segments = vim['vim_endpoint'].split('.')
-                            if vim_ip_segments[:-1] == egress_ip_segments[:-1]:
+                            if vim_ip_segments[:-1] == ingress_ip_segments[:-1]:
                                 cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                                 if cpu_req and mem_req:
@@ -182,11 +182,11 @@ class PlacementSSM(sonSMbase):
                                                              'size']
                                     break
 
-                if 'ingresses' in nap.keys():
+                if 'egresses' in nap.keys():
                     if vnfd['name'] == 'vtu-vnf':
                         for vim in topology:
                             vim_ip_segments = vim['vim_endpoint'].split('.')
-                            if vim_ip_segments[:-1] == ingress_ip_segments[:-1]:
+                            if vim_ip_segments[:-1] == egress_ip_segments[:-1]:
                                 cpu_req = vtu_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
