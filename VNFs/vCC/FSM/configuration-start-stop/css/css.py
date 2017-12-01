@@ -176,8 +176,11 @@ class CssFSM(sonSMbase):
             #ssh_client.sendCommand('ip="$(ifconfig | grep -A 1 \'eth0\' | tail -1 | cut -d \':\' -f 2 | cut -d \' \' -f 1)"')
             #ssh_client.sendCommand('sudo iptables -t nat -A PREROUTING -p tcp --dport 80 -j DNAT --to $ip:3128')
             ssh_client.sendCommand("sudo route add -host "+sp_ip+" gw $(/sbin/ip route | awk '/default/ { print $3 }')")
+            LOG.info("deleting default route")
             ssh_client.sendCommand('sudo route del -net default gw 0.0.0.0')
-            ssh_client.sendCommand('sudo echo \'interface "eth1" { request routers; }\' >> /etc/dhcp/dhclient.conf')
+            LOG.info("Changing dhclient file"
+            ssh_client.sendCommand('sed -i \'57s/.*/echo "eth1" {request routers; }/g\' /etc/dhcp/dhclient.conf')
+            LOG.info("restarting dhclient")
             ssh_client.sendCommand('sudo dhclient eth1')
             ssh_client.close()
             LOG.info('Mon Config: Completed')
