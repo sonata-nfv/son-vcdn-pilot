@@ -165,9 +165,11 @@ class PlacementSSM(sonSMbase):
             for vnfd in functions:
                 if 'ingresses' in nap.keys():
                     if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
+                        LOG.info("Addressing ingress VNF.")
                         for vim in topology:
                             vim_ip_segments = vim['vim_endpoint'].split('.')
                             if vim_ip_segments[:-1] == ingress_ip_segments[:-1]:
+                                LOG.info("Ingress requirements fulfilled, calculating resource capabilities.")
                                 cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                                 if cpu_req and mem_req:
@@ -184,9 +186,14 @@ class PlacementSSM(sonSMbase):
 
                 if 'egresses' in nap.keys():
                     if vnfd['name'] == 'vtu-vnf':
+                        LOG.info("Addressing egress VNF.")
                         for vim in topology:
                             vim_ip_segments = vim['vim_endpoint'].split('.')
+                            LOG.info("vim segments: " + str(vim_ip_segments))
+                            LOG.info("egress segments: " + str(egress_ip_segments))
+                            LOG.info("Third egress segment: " + str(egress_ip_segments[2]))
                             if (vim_ip_segments[:-2] == egress_ip_segments[:-2]) and (egress_ip_segments[2] in ['0', '16']):
+                                LOG.info("Egress requirements fulfilled, calculating resource capabilities.")
                                 cpu_req = vtu_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
