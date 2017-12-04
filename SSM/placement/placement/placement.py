@@ -173,7 +173,7 @@ class PlacementSSM(sonSMbase):
                                 cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                                 if cpu_req and mem_req:
-                                    LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                    LOG.info('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
                                     mapping[vnfd['instance_uuid']] = {}
                                     mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                     vim['core_used'] = vim['core_used'] + \
@@ -198,7 +198,7 @@ class PlacementSSM(sonSMbase):
                                 mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
                                 if cpu_req and mem_req:
-                                    LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                    LOG.info('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
                                     mapping[vnfd['instance_uuid']] = {}
                                     mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                     vim['core_used'] = vim['core_used'] + \
@@ -210,15 +210,18 @@ class PlacementSSM(sonSMbase):
                                     break
 
         if len(mapping) is not len(functions):
+            
+            LOG.info("Additional placement required.")
 
             for vnfd in functions:
                 if vnfd['instance_uuid'] not in mapping.keys():
                     if vnfd['name'] == 'vtc-vnf' or vnfd['name'] == 'vcc-vnf':
+                        LOG.info("Mapping vtc-vnf or vcc-vnf")
                         for vim in topology:
                             cpu_req = vtc_vcc_total_core <= (vim['core_total'] - vim['core_used'])
                             mem_req = vtc_vcc_total_memory <= (vim['memory_total'] - vim['memory_used'])
                             if cpu_req and mem_req:
-                                LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                LOG.info('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
                                 mapping[vnfd['instance_uuid']] = {}
                                 mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                 vim['core_used'] = vim['core_used'] + \
@@ -231,12 +234,13 @@ class PlacementSSM(sonSMbase):
                                 break
 
                     if vnfd['name'] == 'vtu-vnf':
+                        LOG.info("Mapping vtu-vnf")
                         for vim in topology:
                             cpu_req = vtu_total_core <= (vim['core_total'] - vim['core_used'])
                             mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
 
                             if cpu_req and mem_req:
-                                LOG.debug('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
+                                LOG.info('VNF ' + vnfd['instance_uuid'] + ' mapped on VIM ' + vim['vim_uuid'])
                                 mapping[vnfd['instance_uuid']] = {}
                                 mapping[vnfd['instance_uuid']]['vim'] = vim['vim_uuid']
                                 vim['core_used'] = vim['core_used'] + \
