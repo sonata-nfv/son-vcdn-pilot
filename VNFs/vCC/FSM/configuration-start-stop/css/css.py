@@ -179,7 +179,7 @@ class CssFSM(sonSMbase):
             LOG.info("deleting default route")
             ssh_client.sendCommand('sudo route del -net default gw 0.0.0.0')
             LOG.info("Changing dhclient file")
-            ssh_client.sendCommand('sed -i \'57s/.*/echo "eth1" {request routers; }/g\' /etc/dhcp/dhclient.conf')
+            ssh_client.sendCommand('sudo sed -i \'57s/.*/echo "eth1" {request routers; }/g\' /etc/dhcp/dhclient.conf')
             LOG.info("restarting dhclient")
             ssh_client.sendCommand('sudo dhclient eth1')
             ssh_client.close()
