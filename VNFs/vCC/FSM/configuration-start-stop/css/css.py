@@ -178,7 +178,7 @@ class CssFSM(sonSMbase):
             ssh_client.sendCommand("sudo route add -host "+sp_ip+" gw $(/sbin/ip route | awk '/default/ { print $3 }')")
             LOG.info("deleting default route")
             ssh_client.sendCommand('sudo route del -net default gw 0.0.0.0')
-            LOG.info("Changing dhclient file"
+            LOG.info("Changing dhclient file")
             ssh_client.sendCommand('sed -i \'57s/.*/echo "eth1" {request routers; }/g\' /etc/dhcp/dhclient.conf')
             LOG.info("restarting dhclient")
             ssh_client.sendCommand('sudo dhclient eth1')
