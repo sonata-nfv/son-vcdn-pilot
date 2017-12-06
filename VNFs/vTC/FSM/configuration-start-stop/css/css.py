@@ -286,6 +286,7 @@ class CssFSM(sonSMbase):
         LOG.info("Sending ssh command to alter line in vTC with vTU IP as integer")    
         ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand("sudo sed -i '1515s/.*/\tip_hdr->daddr = %s;/' /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge.c" %ipInt)
+        ssh_client.sendCommand("sudo make -C /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples")
         ssh_client.close()
         
         #Stopping PFBRidge
