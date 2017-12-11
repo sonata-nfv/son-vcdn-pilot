@@ -27,6 +27,32 @@ partner consortium (www.sonata-nfv.eu).
 '''
 
 import paramiko,socket
+from functools import wraps
+import errno
+import os
+import signal
+
+class TimeoutError(Exception):
+    pass
+
+def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
+    def decorator(func):
+        def _handle_timeout(signum, frame):
+            raise TimeoutError("error_message")
+            
+
+        def wrapper(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handle_timeout)
+            signal.alarm(seconds)
+            try:
+                result = func(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+
+        return wraps(func)(wrapper)
+
+    return decorator
 
 class Client(object):
     client = None
@@ -60,25 +86,28 @@ class Client(object):
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
 
-
+    @timeout(3)
     def sendCommand(self, command):
-        self.LOG.info("Mon Config:SSH:Incoming command: "+command)
-        if(self.client and self.connected):
-            stdin, stdout, stderr = self.client.exec_command(command)
-            while not stdout.channel.exit_status_ready():
-                # Print data when available
-                if stdout.channel.recv_ready():
-                    alldata = stdout.channel.recv(1024)
-                    prevdata = b"1"
-                    while prevdata:
-                        prevdata = stdout.channel.recv(1024)
-                        alldata += prevdata
-                    self.LOG.info("Mon Config:SSH:{cmd:"+command+",output:"+str(alldata)+"}")
-                    return str(alldata)
-                
-        else:
-            self.LOG.info("Mon Config:SSH:"+command+" aborted.")
-
+        try:
+            self.LOG.info("Mon Config:SSH:Incoming command: "+command)
+            if(self.client and self.connected):
+                stdin, stdout, stderr = self.client.exec_command(command)
+                while not stdout.channel.recv_exit_status():
+                    # Print data when available
+                    if stdout.channel.recv_ready():
+                        alldata = stdout.channel.recv(1024)
+                        prevdata = b"1"
+                        while prevdata:
+                            prevdata = stdout.channel.recv(1024)
+                            alldata += prevdata
+                        self.LOG.info("Mon Config:SSH:{cmd:"+command+",output:"+str(alldata)+"}")
+                        return str(alldata)
+            else:
+                self.LOG.info("Mon Config:SSH:"+command+" aborted.")
+        except (TimeoutError) as  exception:
+            self.LOG.info("Mon Config:SHH:{cmd:"+command+",output: No output}")
+            return "No output"
+            pass
     
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')
