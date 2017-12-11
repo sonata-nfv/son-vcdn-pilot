@@ -86,7 +86,7 @@ class Client(object):
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
 
-    @timeout(2)
+    @timeout(3)
     def sendCommand(self, command):
         try:
             self.LOG.info("Mon Config:SSH:Incoming command: "+command)

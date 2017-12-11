@@ -170,7 +170,6 @@ class CssFSM(sonSMbase):
         LOG.info("extracted sp_ip: " + str(sp_ip))    
         if not self.validIP(sp_ip):
             LOG.info('Mon Config: Invalid SP IP')
-        else:
             sp_ip = '10.30.0.112'
         ips.append(sp_ip)
         fl_exist = ssh_client.sendCommand('[ -f /etc/sonata_sp_address.conf ] && echo "True" || echo "False"')
