@@ -71,7 +71,6 @@ class Client(object):
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
 
-
     def sendCommand(self, command):
         if(self.client and self.connected):
             stdin, stdout, stderr = self.client.exec_command('echo " " && '+command)

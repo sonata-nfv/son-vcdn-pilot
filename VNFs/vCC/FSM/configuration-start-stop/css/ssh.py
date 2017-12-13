@@ -30,7 +30,6 @@ import paramiko,socket
 import time
 
 
-
 class Client(object):
     client = None
     LOG = None
@@ -86,10 +85,8 @@ class Client(object):
                     alldata=alldata.decode("utf-8")[2:]
                     self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata).rstrip()+"}")
                     return str(alldata).rstrip()
-
         else:
             self.LOG.info("Mon Config:SHH:"+command+" aborted.")
-        
 
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')
