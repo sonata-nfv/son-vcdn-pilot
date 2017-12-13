@@ -28,32 +28,6 @@ partner consortium (www.sonata-nfv.eu).
 
 import paramiko,socket
 import time
-from functools import wraps
-import errno
-import os
-import signal
-
-class TimeoutError(Exception):
-    pass
-
-def timeout(seconds=10, error_message=os.strerror(errno.ETIME)):
-    def decorator(func):
-        def _handle_timeout(signum, frame):
-            raise TimeoutError("error_message")
-            
-
-        def wrapper(*args, **kwargs):
-            signal.signal(signal.SIGALRM, _handle_timeout)
-            signal.alarm(seconds)
-            try:
-                result = func(*args, **kwargs)
-            finally:
-                signal.alarm(0)
-            return result
-
-        return wraps(func)(wrapper)
-
-    return decorator
 
 
 class Client(object):
@@ -97,28 +71,23 @@ class Client(object):
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
 
-    @timeout(3)
-    def sendCommand(self, command):
-        try:
-            if(self.client and self.connected):
-                stdin, stdout, stderr = self.client.exec_command(command)
-                while not stdout.channel.recv_exit_status():
-                    # Print data when available
-                    if stdout.channel.recv_ready():
-                        alldata = stdout.channel.recv(1024)
-                        prevdata = b"1"
-                        while prevdata:
-                            prevdata = stdout.channel.recv(1024)
-                            alldata += prevdata
-                        self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata)+"}")
-                        return str(alldata)
 
-            else:
-                self.LOG.info("Mon Config:SHH:"+command+" aborted.")
-        except (TimeoutError) as  exception:
-            self.LOG.info("Mon Config:SHH:{cmd:"+command+",output: No output}")
-            return "No output"
-            pass
+    def sendCommand(self, command):
+        if(self.client and self.connected):
+            stdin, stdout, stderr = self.client.exec_command('echo " " && '+command)
+            while not stdout.channel.recv_exit_status():
+                # Print data when available
+                if stdout.channel.recv_ready():
+                    alldata = stdout.channel.recv(1024)
+                    prevdata = b"1"
+                    while prevdata:
+                        prevdata = stdout.channel.recv(1024)
+                        alldata += prevdata
+                    alldata=alldata.decode("utf-8")[2:]
+                    self.LOG.info("Mon Config:SHH:{cmd:"+command+",output:"+str(alldata).rstrip()+"}")
+                    return str(alldata).rstrip()
+        else:
+            self.LOG.info("Mon Config:SHH:"+command+" aborted.")
 
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')

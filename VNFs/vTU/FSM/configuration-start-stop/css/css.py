@@ -288,7 +288,10 @@ class CssFSM(sonSMbase):
         if len(parts) != 4:
             return False
         for item in parts:
-            if not 0 <= int(item) <= 255:
+            try:
+                if not 0 <= int(item) <= 255:
+                    return False
+            except (ValueError) as  exception:
                 return False
         return True
 
