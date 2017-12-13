@@ -29,7 +29,6 @@ partner consortium (www.sonata-nfv.eu).
 import paramiko,socket
 
 
-
 class Client(object):
     client = None
     LOG = None
@@ -61,7 +60,7 @@ class Client(object):
             sftp.close()
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
-
+            
     def sendCommand(self, command):
         self.LOG.info("Mon Config:SSH:Incoming command: "+command)
         if(self.client and self.connected):
@@ -79,7 +78,6 @@ class Client(object):
                     return str(alldata).rstrip()
         else:
             self.LOG.info("Mon Config:SSH:"+command+" aborted.")
-        
     
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')

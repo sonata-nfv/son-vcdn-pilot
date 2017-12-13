@@ -165,25 +165,12 @@ class CssFSM(sonSMbase):
 #        sp_ip_coded = ssh_client.sendCommand('echo $SSH_CLIENT | cut -d" " -f 1')
 #        LOG.info("extracted coded sp_ip: " + str(sp_ip_coded))
 #        sp_ip = str(sp_ip_coded, 'utf-8')
-        ips=[]
-        sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
-        LOG.info("extracted sp_ip: " + str(sp_ip))    
-        if not self.validIP(sp_ip):
-            LOG.info('Mon Config: Invalid SP IP')
-            sp_ip = '10.30.0.112'
-        ips.append(sp_ip)
-        fl_exist = ssh_client.sendCommand('[ -f /etc/sonata_sp_address.conf ] && echo "True" || echo "False"')
-        if fl_exist == "True":
-            fl = ssh_client.sendCommand('cat /etc/sonata_sp_address.conf')
-            conf_ip = fl.split('=')[1].rstrip()
-            if conf_ip != sp_ip:
-                ips.append(conf_ip)
-        else:
-            LOG.info('Mon Config: /etc/sonata_sp_address.conf NOT FOUND')
+        sp_ip = '10.30.0.112'
+        LOG.info("extracted sp_ip: " + str(sp_ip))
 
         # Configuring the monitoring probe
         LOG.info('Mon Config: Create new conf file')
-        self.createConf(ips, 4, 'vtu-vnf')
+        self.createConf(sp_ip, 4, 'vtu-vnf')
         ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
@@ -266,16 +253,14 @@ class CssFSM(sonSMbase):
 
         return response
     
-    def createConf(self, pw_ips, interval, name):
-        pwurl=[]
+    def createConf(self, pw_ip, interval, name):
         config = configparser.RawConfigParser()
         config.add_section('vm_node')
         config.add_section('Prometheus')
         config.set('vm_node', 'node_name', name)
         config.set('vm_node', 'post_freq', interval)
-        for ip in pw_ips:
-            pwurl.append("http://"+ip+":9091/metrics")
-        config.set('Prometheus', 'server_url', json.dumps(pwurl))  
+        config.set('Prometheus', 'server_url', 'http://'+pw_ip+':9091/metrics')
+    
         with open('node.conf', 'w') as configfile:    # save
             config.write(configfile)
     
