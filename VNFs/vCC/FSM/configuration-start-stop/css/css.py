@@ -168,11 +168,6 @@ class CssFSM(sonSMbase):
             #sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
             #LOG.info("extracted sp_ip: " + str(sp_ip))
             LOG.info('Mon Config: Create new conf file')
-            sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
-            LOG.info("extracted sp_ip: " + str(sp_ip))    
-            if not self.validIP(sp_ip):
-                LOG.info('Mon Config: Invalid SP IP')
-                sp_ip = '10.30.0.112'
             self.createConf(sp_ip, 4, 'vcc-vnf')
             ssh_client.sendFile('node.conf')
             ssh_client.sendCommand('ls /tmp/')
@@ -270,15 +265,6 @@ class CssFSM(sonSMbase):
         f = open('node.conf', 'r')
         LOG.debug('Mon Config-> '+"\n"+f.read())
         f.close()
-
-    def validIP(address):
-        parts = str(address).split(".")
-        if len(parts) != 4:
-            return False
-        for item in parts:
-            if not 0 <= int(item) <= 255:
-                return False
-        return True
 
 
 def main():
