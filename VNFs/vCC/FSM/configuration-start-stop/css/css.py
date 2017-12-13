@@ -267,6 +267,18 @@ class CssFSM(sonSMbase):
         f.close()
 
 
+    def validIP(address):
+        parts = str(address).split(".")
+        if len(parts) != 4:
+            return False
+        for item in parts:
+            try:
+                if not 0 <= int(item) <= 255:
+                    return False
+            except (ValueError) as  exception:
+                return False
+        return True
+
 def main():
     CssFSM()
 

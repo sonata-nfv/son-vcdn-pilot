@@ -28,6 +28,7 @@ partner consortium (www.sonata-nfv.eu).
 
 import paramiko,socket
 
+
 class Client(object):
     client = None
     LOG = None
@@ -59,13 +60,12 @@ class Client(object):
             sftp.close()
         else:
             self.LOG.info("Mon Config:SHH:File sending aborted")
-
-
+            
     def sendCommand(self, command):
         self.LOG.info("Mon Config:SSH:Incoming command: "+command)
         if(self.client and self.connected):
-            stdin, stdout, stderr = self.client.exec_command(command)
-            while not stdout.channel.exit_status_ready():
+            stdin, stdout, stderr = self.client.exec_command('echo " " && '+command)
+            while not stdout.channel.recv_exit_status():
                 # Print data when available
                 if stdout.channel.recv_ready():
                     alldata = stdout.channel.recv(1024)
@@ -73,12 +73,11 @@ class Client(object):
                     while prevdata:
                         prevdata = stdout.channel.recv(1024)
                         alldata += prevdata
-                    self.LOG.info("Mon Config:SSH:{cmd:"+command+",output:"+str(alldata)+"}")
-                    return str(alldata)
-                
+                    alldata=alldata.decode("utf-8")[2:]
+                    self.LOG.info("Mon Config:SSH:{cmd:"+command+",output:"+str(alldata).rstrip()+"}")
+                    return str(alldata).rstrip()
         else:
             self.LOG.info("Mon Config:SSH:"+command+" aborted.")
-
     
     def close(self):
         self.LOG.info('Mon Config:SHH:Close session')
