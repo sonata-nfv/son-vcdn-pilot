@@ -75,7 +75,7 @@ class Client(object):
     def sendCommand(self, command):
         if(self.client and self.connected):
             stdin, stdout, stderr = self.client.exec_command('echo " " && '+command)
-            while not stdout.channel.stdout.channel.recv_exit_status():
+            while not stdout.channel.recv_exit_status():
                 # Print data when available
                 if stdout.channel.recv_ready():
                     alldata = stdout.channel.recv(1024)
