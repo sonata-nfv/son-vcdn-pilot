@@ -192,7 +192,7 @@ class PlacementSSM(sonSMbase):
                             LOG.info("vim segments: " + str(vim_ip_segments))
                             LOG.info("egress segments: " + str(egress_ip_segments))
                             LOG.info("Third egress segment: " + str(egress_ip_segments[2]))
-                            if (vim_ip_segments[:-2] == egress_ip_segments[:-2]) and (egress_ip_segments[2] in ['0', '16']) and (vim_ip_segments[2] in ['0', '16']):
+                            if (vim_ip_segments[:-1] == egress_ip_segments[:-1]) or ((vim_ip_segments[:-2] == egress_ip_segments[:-2]) and (egress_ip_segments[2] in ['0', '16']) and (vim_ip_segments[2] in ['0', '16'])):
                                 LOG.info("Egress requirements fulfilled, calculating resource capabilities.")
                                 cpu_req = vtu_total_core <= (vim['core_total'] - vim['core_used'])
                                 mem_req = vtu_total_memory <= (vim['memory_total'] - vim['memory_used'])
