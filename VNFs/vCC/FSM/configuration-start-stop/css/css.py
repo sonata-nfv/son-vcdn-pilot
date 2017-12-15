@@ -165,8 +165,10 @@ class CssFSM(sonSMbase):
         sp_ip = '10.30.0.112'
         if sp_ip:
             ssh_client = Client(mgmt_ip,'sonata','sonata',LOG, retries=100)
-            #sp_ip = ssh_client.sendCommand('echo $SSH_CLIENT')
-            #LOG.info("extracted sp_ip: " + str(sp_ip))
+            sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
+            if not validIP(sp_ip):
+                LOG.error("Couldn't obtain SP IP address from ssh_client. Monitoring configuration aborted")
+                sp_ip = '10.30.0.112'      
             LOG.info('Mon Config: Create new conf file')
             self.createConf(sp_ip, 4, 'vcc-vnf')
             ssh_client.sendFile('node.conf')

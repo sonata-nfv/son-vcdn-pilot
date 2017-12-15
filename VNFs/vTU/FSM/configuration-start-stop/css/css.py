@@ -160,17 +160,23 @@ class CssFSM(sonSMbase):
 
         # Setting up ssh connection with the VNF
         ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
-
-        # Extracting the ip of the service platform
-#        sp_ip_coded = ssh_client.sendCommand('echo $SSH_CLIENT | cut -d" " -f 1')
-#        LOG.info("extracted coded sp_ip: " + str(sp_ip_coded))
-#        sp_ip = str(sp_ip_coded, 'utf-8')
-        sp_ip = '10.30.0.112'
-        LOG.info("extracted sp_ip: " + str(sp_ip))
-
+        sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
+        LOG.info("extracted sp_ip from ssh client: " + str(sp_ip))
+        if not validIP(sp_ip):
+            LOG.error("Couldn't obtain SP IP address from ssh_client. Monitoring configuration aborted")
+            sp_ip = '10.30.0.112'
+        ips=[]
+        ips.append(sp_ip)
+        
+        fl_exist = ssh_client.sendCommand('[ -f /etc/sonata_sp_address.conf ] && echo "True" || echo "False"')
+        if fl_exist == "True":
+            fl = ssh_client.sendCommand('cat /etc/sonata_sp_address.conf')
+            conf_ip = fl.split('=')[1].rstrip()
+        if conf_ip != sp_ip:
+            ips.append(conf_ip)
         # Configuring the monitoring probe
         LOG.info('Mon Config: Create new conf file')
-        self.createConf(sp_ip, 4, 'vtu-vnf')
+        self.createConf(ips, 4, 'vtu-vnf')
         ssh_client.sendFile('node.conf')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/node.conf /opt/Monitoring/node.conf')
@@ -254,12 +260,15 @@ class CssFSM(sonSMbase):
         return response
     
     def createConf(self, pw_ip, interval, name):
+        pwurl=[]
         config = configparser.RawConfigParser()
         config.add_section('vm_node')
         config.add_section('Prometheus')
         config.set('vm_node', 'node_name', name)
         config.set('vm_node', 'post_freq', interval)
-        config.set('Prometheus', 'server_url', 'http://'+pw_ip+':9091/metrics')
+        for ip in pw_ips:
+            pwurl.append("http://"+ip+":9091/metrics")
+        config.set('Prometheus', 'server_url', json.dumps(pwurl))
     
         with open('node.conf', 'w') as configfile:    # save
             config.write(configfile)
