@@ -266,7 +266,7 @@ class CssFSM(sonSMbase):
         config.add_section('Prometheus')
         config.set('vm_node', 'node_name', name)
         config.set('vm_node', 'post_freq', interval)
-        for ip in pw_ips:
+        for ip in pw_ip:
             pwurl.append("http://"+ip+":9091/metrics")
         config.set('Prometheus', 'server_url', json.dumps(pwurl))
     
