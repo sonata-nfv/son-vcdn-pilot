@@ -277,7 +277,7 @@ class CssFSM(sonSMbase):
         LOG.debug('Mon Config-> '+"\n"+f.read())
         f.close()
 
-    def validIP(address):
+    def validIP(self, address):
         parts = str(address).split(".")
         if len(parts) != 4:
             return False
