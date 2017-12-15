@@ -269,7 +269,7 @@ class CssFSM(sonSMbase):
         f.close()
 
 
-    def validIP(address):
+    def validIP(self, address):
         parts = str(address).split(".")
         if len(parts) != 4:
             return False
