@@ -162,7 +162,7 @@ class CssFSM(sonSMbase):
         ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
         sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
         LOG.info("extracted sp_ip from ssh client: " + str(sp_ip))
-        if not validIP(sp_ip):
+        if not self.validIP(sp_ip):
             LOG.error("Couldn't obtain SP IP address from ssh_client. Monitoring configuration aborted")
             sp_ip = '10.30.0.112'
         ips=[]
