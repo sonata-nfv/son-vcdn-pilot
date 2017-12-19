@@ -154,6 +154,8 @@ class CssFSM(sonSMbase):
 
         if (content['vnfd']['name']) == vm_image:
             mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
+        #TODO 
+            eth0 = "172.16.0.8/32"
 
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
@@ -195,6 +197,8 @@ class CssFSM(sonSMbase):
         ssh_client.sendCommand(command)
         ssh_client.sendCommand('sudo docker-compose up -d')
         ssh_client.close()
+        LOG.info("Adding Iptables rules")
+        ssh_client.sendCommand('sudo iptables -t nat -A POSTROUTING  -s '+eth0+" -d 10.100.32.40 -j SNAT --to-source 10.100.0.40')
         LOG.info('vTU Service Config: Completed')
         # Create a response for the FLM
         response = {}
