@@ -154,7 +154,7 @@ class CssFSM(sonSMbase):
 
         if (content['vnfd']['name']) == vm_image:
             mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
-
+       
         if not mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
@@ -229,12 +229,21 @@ class CssFSM(sonSMbase):
         """
         LOG.info("Performing life cycle configure event")
         LOG.info("content: " + str(content.keys()))
+
         # TODO: Add the configure logic. The content is a dictionary that
         # contains the required data
 
         nsr = content['nsr']
         vnfrs = content['vnfrs']
+        ingress = content['ingress']
+        egress = content['egress'] 
 
+        #TODO 
+        eth0 = ssh_client.sendCommand("ip addr show dev eth0 | grep 'inet ' | awk '{ print $2 }' ")
+        LOG.info("print eth0: "+eth0)
+        LOG.info("Adding Iptables rules to change source IP")
+        ssh_client.sendCommand('sudo iptables -t nat -A POSTROUTING  -s '+eth0+' -d '+ingress+' -j SNAT --to-source '+egress+' ')
+        
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
