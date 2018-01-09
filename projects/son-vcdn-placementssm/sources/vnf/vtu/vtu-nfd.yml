@@ -96,3 +96,6 @@ function_specific_managers:
     options:
       - key: "type"
         value: "start"
+      - key: "type"
+        value: "configure"
+        
