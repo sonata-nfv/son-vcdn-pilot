@@ -311,19 +311,19 @@ class CssFSM(sonSMbase):
             'Cache-Control': "no-cache",    
         }
 
-        counter = 10
-        continueVar = False
+        counter = 0
+        continuevar = False
+        response = None
         while counter < 10:
             time.sleep(5)
             try:
                 response = requests.request("GET", url, headers=headers)
-                continueVar = True
+                continuevar = True
             except:
                 counter = counter + 1
-                continueVar = False
+                continuevar = False
                 LOG.info('Request failed, retrying...')
-
-            if continueVar:
+            if continuevar:
                 break
 
         j = json.loads(response.text)
