@@ -197,6 +197,10 @@ class CssFSM(sonSMbase):
         ssh_client.sendCommand(command)
         ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/input /home/sonata/input')
         ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/output /home/sonata/output')
+        self.createJsonFile(self)
+        ssh_client.sendFile('JSON_file.json')
+        ssh_client.sendCommand('ls /tmp/')
+        ssh_client.sendCommand('sudo mv /tmp/JSON_file.json /home/sonata/output/JSON_file.json')
         ssh_client.sendCommand('sudo docker-compose up -d')
         self.creatingJobId(self.mgmt_ip)
         ssh_client.close()
@@ -339,6 +343,13 @@ class CssFSM(sonSMbase):
         response = requests.request("POST", url, data=payload, headers=headers)
         LOG.info(response.text)
 
+    def createJsonFile(self):
+        file = open('JSON_file.json','w+') 
+        file.write('{"title": "ImmersiaTV content server","content": []}') 
+        file.close()
+        file = open('JSON_file.json','r')
+        LOG.debug('JSON Configuration-> '+"\n"+file.read())
+        file.close()
 
 def main():
     CssFSM()
