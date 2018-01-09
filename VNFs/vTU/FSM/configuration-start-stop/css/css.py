@@ -26,6 +26,7 @@ acknowledge the contributions of their colleagues of the SONATA
 partner consortium (www.sonata-nfv.eu).
 """
 
+import requests
 import logging
 import yaml
 import configparser
@@ -66,7 +67,7 @@ class CssFSM(sonSMbase):
         self.id_number = '1'
         self.version = 'v0.1'
         self.description = "An FSM that subscribes to start, stop and configuration topic"
-
+        self.mgmt_ip = None
         super(self.__class__, self).__init__(specific_manager_type=self.specific_manager_type,
                                              service_name=self.service_name,
                                              function_name=self.function_name,
@@ -153,14 +154,14 @@ class CssFSM(sonSMbase):
         vnfr = content["vnfr"]
 
         if (content['vnfd']['name']) == vm_image:
-            mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
+            self.mgmt_ip = content['vnfr']['virtual_deployment_units'][0]['vnfc_instance'] [0]['connection_points'][0]['interface']['address']
        
-        if not mgmt_ip:
+        if not self.mgmt_ip:
             LOG.error("Couldn't obtain IP address from VNFR")
             return
 
         # Setting up ssh connection with the VNF
-        ssh_client = Client(mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
+        ssh_client = Client(self.mgmt_ip, 'sonata', 'sonata', LOG, retries=10)
         sp_ip = ssh_client.sendCommand("echo $SSH_CLIENT | awk '{ print $1}'")
         LOG.info("extracted sp_ip from ssh client: " + str(sp_ip))
         if not self.validIP(sp_ip):
@@ -190,14 +191,14 @@ class CssFSM(sonSMbase):
 
         #Configuring vTU docker container
         LOG.info('vTU Start: Start the vTU docker container')
-        ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
-        command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(mgmt_ip)
+        ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
+        command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(self.mgmt_ip)
         ssh_client.sendCommand(command)
         ssh_client.sendCommand('mount 10.100.0.40:/home/localadmin/input /home/sonata/input')
         ssh_client.sendCommand('mount 10.100.0.40:/home/localadmin/output /home/sonata/output')
         ssh_client.sendCommand('ls /home/sonata/output/JSON_file.json')
         ssh_client.sendCommand('sudo docker-compose up -d')
-        self.creatingJobId(mgmt_ip)
+        self.creatingJobId(self.mgmt_ip)
         ssh_client.close()
         LOG.info('vTU Service Config: Completed')
         # Create a response for the FLM
@@ -242,6 +243,7 @@ class CssFSM(sonSMbase):
         ingress = content['ingress']
         egress = content['egress'] 
 
+        ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
         #TODO 
         eth0 = ssh_client.sendCommand("ip addr show dev eth0 | grep 'inet ' | awk '{ print $2 }' ")
         LOG.info("print eth0: "+eth0)
@@ -303,7 +305,7 @@ class CssFSM(sonSMbase):
                 return False
         return True
 
-    def creatingJobId(self, mgmt_ip)
+    def creatingJobId(self, mgmt_ip):
         url = "http://" + mgmt_ip + ":8083/job"
         headers = {
             'Cache-Control': "no-cache",    
