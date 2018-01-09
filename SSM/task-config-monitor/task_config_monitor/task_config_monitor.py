@@ -160,7 +160,7 @@ class TaskConfigMonitorSSM(sonSMbase):
         for vnf in content['functions']:
             new_entry = {}
             new_entry['id'] = vnf['id']
-            if vnf['vnfd']['name'] == 'vtc-vnf':
+            if vnf['vnfd']['name'] in ['vtc-vnf', 'vtu-vnf']:
                 new_entry['configure'] = {'trigger': True,
                                           'payload': {}}
             else:
