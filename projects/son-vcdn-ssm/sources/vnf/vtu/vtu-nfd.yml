@@ -5,7 +5,7 @@
 descriptor_version: "vnfd-schema-01"
 vendor: "eu.sonata-nfv"
 name: "vtu-vnf"
-version: "0.1"
+version: "0.5"
 author: "Javier Fernandez Hidalgo, Einar Meyerson :@ i2CAT"
 description: "VNF implementing a vTU (virtual Transcoding Unit)"
 ##
@@ -15,7 +15,7 @@ virtual_deployment_units:
   - id: "vdu01"
     vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vtu-vnf/sonata-vtu.qcow2"
     vm_image_format: "qcow2"
-    vm_image_md5: 'c9ac48c3e61dd2a8f178341aa280576c'
+    vm_image_md5: '04d71fd444ce43b0efda76367e3b7318'
     resource_requirements:
       cpu:
         vcpus: 4
@@ -96,3 +96,6 @@ function_specific_managers:
     options:
       - key: "type"
         value: "start"
+      - key: "type"
+        value: "configure"
+        
