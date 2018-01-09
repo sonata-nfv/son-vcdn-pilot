@@ -26,8 +26,9 @@ acknowledge the contributions of their colleagues of the SONATA
 partner consortium (www.sonata-nfv.eu).
 """
 
-import requests
+import time
 import logging
+import requests
 import yaml
 import configparser
 import json
@@ -310,7 +311,22 @@ class CssFSM(sonSMbase):
         headers = {
             'Cache-Control': "no-cache",    
         }
-        response = requests.request("GET", url, headers=headers)
+
+        counter = 10
+        continueVar = False
+        while counter < 10:
+            time.sleep(5)
+            try:
+                response = requests.request("GET", url, headers=headers)
+                continueVar = True
+            except:
+                counter = counter + 1
+                continueVar = False
+                LOG.info('Request failed, retrying...')
+
+            if continueVar:
+                break
+
         j = json.loads(response.text)
         contentID = j[0]['outputContentId']
         LOG.info(contentID)
