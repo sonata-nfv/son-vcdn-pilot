@@ -193,7 +193,11 @@ class CssFSM(sonSMbase):
         ssh_client = Client(mgmt_ip,'sonata','sonata',LOG)
         command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(mgmt_ip)
         ssh_client.sendCommand(command)
+        ssh_client.sendCommand('mount 10.100.0.40:/home/localadmin/input /home/sonata/input')
+        ssh_client.sendCommand('mount 10.100.0.40:/home/localadmin/output /home/sonata/output')
+        ssh_client.sendCommand('ls /home/sonata/output/JSON_file.json')
         ssh_client.sendCommand('sudo docker-compose up -d')
+        self.creatingJobId(mgmt_ip)
         ssh_client.close()
         LOG.info('vTU Service Config: Completed')
         # Create a response for the FLM
@@ -298,6 +302,25 @@ class CssFSM(sonSMbase):
             except (ValueError) as  exception:
                 return False
         return True
+
+    def creatingJobId(self, mgmt_ip)
+        url = "http://" + mgmt_ip + ":8083/job"
+        headers = {
+            'Cache-Control': "no-cache",    
+        }
+        response = requests.request("GET", url, headers=headers)
+        j = json.loads(response.text)
+        contentID = j[0]['outputContentId']
+        LOG.info(contentID)
+
+        url = "http://" + mgmt_ip + ":8083/output/publish/" + contentID
+        payload = "{\n\t\"data\":\n\t{\n\"name\": \"Sonata_demo\",\n\"id\": \""+ contentID +"\",\n\"preview\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/main.mp4\",\n\"thumbnail\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/thumnail.png\",\n\"url\": \"http://10.100.0.40:8080/dash/Sonata_demo/sintel.xml\"\n\t}\n}"
+        headers = {
+            'Content-Type': "application/json",
+            'Cache-Control': "no-cache",
+        }
+        response = requests.request("POST", url, data=payload, headers=headers)
+        LOG.info(response.text)
 
 
 def main():
