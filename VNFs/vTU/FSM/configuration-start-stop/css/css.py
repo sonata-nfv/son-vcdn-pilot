@@ -244,8 +244,8 @@ class CssFSM(sonSMbase):
 
         nsr = content['nsr']
         vnfrs = content['vnfrs']
-        ingress = content['ingress']['nap']
-        egress = content['egress']['nap']
+        ingress = content['ingress'][0]['nap']
+        egress = content['egress'][0]['nap']
 
         ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
         #TODO 
