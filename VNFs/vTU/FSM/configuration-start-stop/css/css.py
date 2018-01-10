@@ -249,10 +249,10 @@ class CssFSM(sonSMbase):
 
         ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
         #TODO 
-        eth0 = ssh_client.sendCommand("ip addr show dev eth0 | grep 'inet ' | awk '{ print $2 }' ")
+        eth0 = ssh_client.sendCommand('ifconfig eth0 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
         LOG.info("print eth0: "+eth0)
         LOG.info("Adding Iptables rules to change source IP")
-        ssh_client.sendCommand('sudo iptables -t nat -A POSTROUTING  -s '+eth0+' -d '+ingress+' -j SNAT --to-source '+egress+' ')
+        ssh_client.sendCommand('sudo iptables -t nat -A POSTROUTING  -s '+str(eth0)+' -d '+ingress+' -j SNAT --to-source '+egress+' ')
         
         # Create a response for the FLM
         response = {}
