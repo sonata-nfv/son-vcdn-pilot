@@ -197,7 +197,7 @@ class CssFSM(sonSMbase):
         ssh_client.sendCommand(command)
         ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/input /home/sonata/input')
         ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/output /home/sonata/output')
-        self.createJsonFile(self)
+        self.createJsonFile()
         ssh_client.sendFile('JSON_file.json')
         ssh_client.sendCommand('ls /tmp/')
         ssh_client.sendCommand('sudo mv /tmp/JSON_file.json /home/sonata/output/JSON_file.json')
