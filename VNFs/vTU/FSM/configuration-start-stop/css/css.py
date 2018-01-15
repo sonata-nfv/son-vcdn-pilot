@@ -245,13 +245,16 @@ class CssFSM(sonSMbase):
         nsr = content['nsr']
         vnfrs = content['vnfrs']
         ingress = content['ingress'][0]['nap']
+        LOG.info("ingress : " +ingress)
         egress = content['egress'][0]['nap']
+        LOG.info("egress : " +egress)
 
         ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
         #TODO 
         eth0 = ssh_client.sendCommand('ifconfig eth0 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
         LOG.info("print eth0: "+eth0)
         LOG.info("Adding Iptables rules to change source IP")
+        LOG.info('sudo iptables -t nat -A POSTROUTING  -s '+eth0+' -j SNAT --to-source '+egress)
         ssh_client.sendCommand('sudo iptables -t nat -A POSTROUTING  -s '+eth0+' -j SNAT --to-source '+egress)
         LOG.info("Iptables added")
         
