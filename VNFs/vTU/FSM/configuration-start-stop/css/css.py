@@ -337,19 +337,21 @@ class CssFSM(sonSMbase):
                 LOG.info('Request failed, retrying...')
             if continuevar:
                 break
+        try:
+            j = json.loads(response.text)
+            contentID = j[0]['outputContentId']
+            LOG.info(contentID)
 
-        j = json.loads(response.text)
-        contentID = j[0]['outputContentId']
-        LOG.info(contentID)
-
-        url = "http://" + mgmt_ip + ":8083/output/publish/" + contentID
-        payload = "{\n\t\"data\":\n\t{\n\"name\": \"Sonata_demo\",\n\"id\": \""+ contentID +"\",\n\"preview\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/main.mp4\",\n\"thumbnail\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/thumnail.png\",\n\"url\": \"http://10.100.0.40:8080/dash/Sonata_demo/sintel.xml\"\n\t}\n}"
-        headers = {
-            'Content-Type': "application/json",
-            'Cache-Control': "no-cache",
-        }
-        response = requests.request("POST", url, data=payload, headers=headers)
-        LOG.info(response.text)
+            url = "http://" + mgmt_ip + ":8083/output/publish/" + contentID
+            payload = "{\n\t\"data\":\n\t{\n\"name\": \"Sonata_demo\",\n\"id\": \""+ contentID +"\",\n\"preview\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/main.mp4\",\n\"thumbnail\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/thumnail.png\",\n\"url\": \"http://10.100.0.40:8080/dash/Sonata_demo/sintel.xml\"\n\t}\n}"
+            headers = {
+                'Content-Type': "application/json",
+                'Cache-Control': "no-cache",
+            }
+            response = requests.request("POST", url, data=payload, headers=headers)
+            LOG.info(response.text)
+        except Exception as er:
+            LOG.error("Error during creatingJobId function:" +str(er))
 
     def createJsonFile(self):
         file = open('JSON_file.json','w+') 
