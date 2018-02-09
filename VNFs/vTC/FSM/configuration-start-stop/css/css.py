@@ -303,7 +303,7 @@ class CssFSM(sonSMbase):
         
         #Starting PFBridge again with command line
         ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
-        ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d http://'+mgmt_ip+':8086 -i '+ipInt+' &')
+        ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d http://'+mgmt_ip+':8086 -i '+str(ipInt)+' &')
         LOG.info("Started pfbridge again with new configuration")
         ssh_client.close()
         
