@@ -312,9 +312,9 @@ class CssFSM(sonSMbase):
         #url = "http://"+self.hostIp+":8080/startPFbridge2"
         #querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\"+ipInt+"\" }"}
         #headers = {
-            'content-type': "application/x-www-form-urlencoded",
-            'accept': "application/json",
-            }
+           # 'content-type': "application/x-www-form-urlencoded",
+           # 'accept': "application/json",
+           # }
 
         #response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
         #LOG.info("Response on post request: " + str(response.text))
