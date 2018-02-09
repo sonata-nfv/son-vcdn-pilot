@@ -301,17 +301,24 @@ class CssFSM(sonSMbase):
         LOG.info("Response on post request: " + str(response.text))
         LOG.info("Status code of response " + str(response.status_code))
         
+        #Starting PFBridge again with command line
+        ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
+        ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d http://'+mgmt_ip+':8086 -i '+ipInt+' &')
+        LOG.info("Started pfbridge again with new configuration")
+        ssh_client.close()
+        
+        
         #Starting PFBridge agan
-        url = "http://"+self.hostIp+":8080/startPFbridge2"
-        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\"+ipInt+"\" }"}
-        headers = {
+        #url = "http://"+self.hostIp+":8080/startPFbridge2"
+        #querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\"+ipInt+"\" }"}
+        #headers = {
             'content-type': "application/x-www-form-urlencoded",
             'accept': "application/json",
             }
 
-        response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
-        LOG.info("Response on post request: " + str(response.text))
-        LOG.info("Status code of response " + str(response.status_code))
+        #response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+        #LOG.info("Response on post request: " + str(response.text))
+        #LOG.info("Status code of response " + str(response.status_code))
 
         # Create a response for the FLM
         response = {}
