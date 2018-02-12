@@ -173,7 +173,7 @@ class CssFSM(sonSMbase):
         
         # Post request
         url = "http://"+mgmt_ip+":8080/startPFbridge"
-        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\"}"}
+        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\", \"trans\": \"\"}"}
 
         headers = {
             'content-type': "application/x-www-form-urlencoded",
@@ -209,7 +209,7 @@ class CssFSM(sonSMbase):
         LOG.info("Configuring vTC pfbridge and datasources")
         ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d http://'+mgmt_ip+':8086 &')
         LOG.info("Started pfbridge (if it was not)")
-        ssh_client.sendCommand("sed -i 's/10.100.32.231/"+mgmt_ip+"/g' /root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json")
+        ssh_client.sendCommand("sudo sed -i 's/10.100.32.231/"+mgmt_ip+"/g' /root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json")
         LOG.info("Updating datasource")
         ssh_client.sendCommand("sudo curl -X PUT --connect-timeout 60 --data-binary @/root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json -H 'Content-Type:application/json' -H 'Accept: application/json' http://admin:admin@"+mgmt_ip+":3000/api/datasources/15")
         ssh_client.close()
@@ -301,24 +301,25 @@ class CssFSM(sonSMbase):
         LOG.info("Response on post request: " + str(response.text))
         LOG.info("Status code of response " + str(response.status_code))
         
+        """
         #Starting PFBridge again with command line
         ssh_client = Client(self.hostIp,'ubuntu','randompassword',LOG)
         ssh_client.sendCommand('sudo /root/gowork/src/pfring_web_api/vtc/PF_RING/userland/examples/pfbridge -a eth1 -b eth2 -d http://'+mgmt_ip+':8086 -i '+str(ipInt)+' &')
         LOG.info("Started pfbridge again with new configuration")
         ssh_client.close()
-        
+        """
         
         #Starting PFBridge agan
-        #url = "http://"+self.hostIp+":8080/startPFbridge2"
-        #querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\"+ipInt+"\" }"}
-        #headers = {
-           # 'content-type': "application/x-www-form-urlencoded",
-           # 'accept': "application/json",
-           # }
+        url = "http://"+self.hostIp+":8080/startPFbridge2"
+        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\""+str(ipInt)+"\"}"}
+        headers = {
+            'content-type': "application/x-www-form-urlencoded",
+            'accept': "application/json",
+            }
 
-        #response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
-        #LOG.info("Response on post request: " + str(response.text))
-        #LOG.info("Status code of response " + str(response.status_code))
+        response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+        LOG.info("Response on post request: " + str(response.text))
+        LOG.info("Status code of response " + str(response.status_code))
 
         # Create a response for the FLM
         response = {}
