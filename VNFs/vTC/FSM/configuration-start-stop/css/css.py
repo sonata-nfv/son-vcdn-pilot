@@ -310,7 +310,7 @@ class CssFSM(sonSMbase):
         """
         
         #Starting PFBridge agan
-        url = "http://"+self.hostIp+":8080/startPFbridge2"
+        url = "http://"+self.hostIp+":8080/startPFbridge"
         querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\""+str(ipInt)+"\"}"}
         headers = {
             'content-type': "application/x-www-form-urlencoded",
