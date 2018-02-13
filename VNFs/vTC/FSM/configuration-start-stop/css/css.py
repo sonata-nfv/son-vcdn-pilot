@@ -314,6 +314,8 @@ class CssFSM(sonSMbase):
         #Starting PFBridge agan
         url = "http://"+self.hostIp+":8080/startPFbridge"
         querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\""+str(ipInt)+"\"}"}
+        LOG.info(" Data to send to "+url+" is : ")
+        LOG.info(querystring)
         headers = {
             'content-type': "application/x-www-form-urlencoded",
             'accept': "application/json",
