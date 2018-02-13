@@ -184,13 +184,15 @@ class TaskConfigMonitorSSM(sonSMbase):
         """
         This method will be triggered when monitoring data is received.
         """
+        LOG.info("New monitoring event: " + str(content))
 
         # Check if the alert indicate that the number of requests is achieved
-        alert_name = content['alertname']
-        LOG.info("New monitoring event: " + str(alert_name))
+        if 'alertname' in content.keys():
+            alert_name = content['alertname']
+            LOG.info("New alert: " + str(alert_name))
 
-        if alert_name == "mon_rule_num_reqs":
-            self.push_monitor_event()
+            if alert_name == "mon_rule_num_reqs":
+                self.push_monitor_event()
 
     def push_monitor_event(self):
         """
