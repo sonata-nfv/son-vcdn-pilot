@@ -57,7 +57,12 @@ class TaskConfigMonitorSSM(sonSMbase):
         self.version = 'v0.1'
         self.counter = 0
         self.nsd = None
+        self.monitor_event_finished = False
         self.vnfs = None
+        self.nsr = None
+        self.vnfrs = None
+        self.ingress = None
+        self.egress = None
         self.description = "Task - Config SSM for the vCDN."
 
         super(self.__class__, self).__init__(specific_manager_type= self.specific_manager_type,
@@ -165,8 +170,17 @@ class TaskConfigMonitorSSM(sonSMbase):
             new_entry = {}
             new_entry['id'] = vnf['id']
             if vnf['vnfd']['name'] in ['vtc-vnf', 'vtu-vnf']:
+                payload = {}
+                payload['nsr'] = self.nsr
+                payload['vnfrs'] = self.vnfrs
+                if self.ingress is not None:
+                    payload['ingress'] = self.ingress
+                if self.egress is not None:
+                    payload['egress'] = self.egress
+
+                LOG.info("keys in payload: " + str(payload.keys()))
                 new_entry['configure'] = {'trigger': True,
-                                          'payload': {}}
+                                          'payload': payload}
             else:
                 new_entry['configure'] = {'trigger': False,
                                           'payload': {}}
@@ -186,13 +200,26 @@ class TaskConfigMonitorSSM(sonSMbase):
         """
         LOG.info("New monitoring event: " + str(content))
 
+        # The first monitoring message contains all the records
+        if 'vnfs' in content.keys():
+            vnfrs = []
+            for vnf in content['vnfs']:
+                vnfrs.append(vnf['vnfr'])
+
+            self.vnfrs = vnfrs
+            self.nsr = content['nsr']
+            self.ingress = content['ingress']
+            self.egress = content['egress']
+
         # Check if the alert indicate that the number of requests is achieved
         if 'alertname' in content.keys():
             alert_name = content['alertname']
             LOG.info("New alert: " + str(alert_name))
 
             if alert_name == "mon_rule_num_reqs":
-                self.push_monitor_event()
+                if not self.monitor_event_finished:
+                    self.push_monitor_event()
+                    self.monitor_event_finished = True
 
     def push_monitor_event(self):
         """
