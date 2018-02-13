@@ -76,6 +76,10 @@ class TaskConfigMonitorSSM(sonSMbase):
         topic = 'generic.ssm.' + self.sfuuid
         self.manoconn.subscribe(self.received_request, topic)
 
+        # Subscribe to a topic to emulate monitor behavior
+        topic = 'emulate.monitoring'
+        self.manoconn.subscribe(self.emulate_monitor_event, topic)
+
     def received_request(self, ch, method, prop, payload):
         """
         This method is called when the SLM is reaching out
@@ -121,8 +125,8 @@ class TaskConfigMonitorSSM(sonSMbase):
         # Update the received schedule
         schedule = content['schedule']
 
-        schedule.insert(7, 'vnfs_config')
-        schedule.insert(7, 'configure_ssm')
+#        schedule.insert(7, 'vnfs_config')
+#        schedule.insert(7, 'configure_ssm')
 
         response = {'schedule': schedule, 'status': 'COMPLETED'}
 
@@ -142,12 +146,12 @@ class TaskConfigMonitorSSM(sonSMbase):
         what the required payload is.
         """
 
-        if content["workflow"] == 'instantiation':
-            msg = "Received a configure request for the instantiation workflow"
+        if content["workflow"] == 'reconfigure':
+            msg = "Received a configure request for the reconfigure workflow"
             LOG.info(msg)
-            self.configure_instantiation(corr_id, content)
+            self.configure_service(corr_id, content)
 
-    def configure_instantiation(self, corr_id, content):
+    def configure_service(self, corr_id, content):
         """
         This method creates the configure response for the instantiation
         workflow. It will set the trigger for a config_event for each VNF.
@@ -180,35 +184,35 @@ class TaskConfigMonitorSSM(sonSMbase):
         """
         This method will be triggered when monitoring data is received.
         """
-        # if 'nsd' in content.keys():
-        #     LOG.info("Received descriptors")
-        #     self.nsd = content['nsd']
-        #     self.vnfs = content['vnfs']
 
-        # else:
-        #     if self.counter == 0:
-        #         message = {}
-        #         message['foo'] = 'bar'
-        #         message['service_instance_id'] = self.sfuuid
-        #         message['workflow'] = 'termination'
+        # Check if the alert indicate that the number of requests is achieved
+        alert_name = content['alertname']
+        LOG.info("New monitoring event: " + str(alert_name))
 
-        #         # message['schedule'] = ['vnfs_scale']
-        #         # message['vnf'] = []
+        if alert_name == "mon_rule_num_reqs":
+            self.push_monitor_event()
 
-        #         # for vnf in self.vnfs:
-        #         #     if vnf['vnfd']['name'] == 'vtc-vnf':
-        #         #         new_entry = {}
-        #         #         new_entry['id'] = vnf['id']
-        #         #         new_entry['scale'] = {'trigger': True,
-        #         #                               'payload': {'foo': 'bar',
-        #         #                                           'vnfr': 'bar'}}
-        #         #         message['vnf'].append(new_entry)
-        #         topic = 'monitor.ssm.' + self.sfuuid
-        #         self.manoconn.notify(topic, yaml.dump(message))
-        #         self.counter = 1
-        #         LOG.info("Responded to monitoring request")
+    def push_monitor_event(self):
+        """
+        This method sends a message to the SLM to start the reconfigure
+        workflow.
+        """
 
-        pass
+        message = {}
+        message['workflow'] = 'reconfigure'
+        message['service_instance_id'] = self.sfuuid
+
+        payload = yaml.dump(message)
+
+        topic = 'monitor.ssm.' + self.sfuuid
+        self.manoconn.notify(topic, payload)
+
+    def emulate_monitor_event(self, ch, method, prop, payload):
+        """
+        This topic processes an emulated monitor event
+        """
+
+        self.push_monitor_event()
 
 
 def main():
