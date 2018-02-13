@@ -139,10 +139,10 @@ monitoring_rules:
       - name: "notification02"
         type: "rabbitmq_message"
   - name: "mon:rule:num_reqs"
-    description: "Trigger events if number of requests is more than 10000."
+    description: "Trigger events if number of requests is more than 20."
     duration: 5
     duration_unit: "s"
-    condition: "vdu01:num_reqs > 10000"
+    condition: "vdu01:num_reqs > 20"
     notification:
       - name: "notification02"
         type: "rabbitmq_message"
