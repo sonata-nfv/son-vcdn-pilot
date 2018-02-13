@@ -58,9 +58,9 @@ virtual_deployment_units:
       - name: "mbits_packets_youtube"
         unit: "bps"
       - name: "mbits_packets_video"
-        unit: "pps"
+        unit: "bps"
       - name: "num_reqs"
-        unit: "pps"
+        unit: "bps"
     
 
     connection_points:
