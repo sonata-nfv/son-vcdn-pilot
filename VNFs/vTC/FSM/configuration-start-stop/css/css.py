@@ -174,7 +174,7 @@ class CssFSM(sonSMbase):
         # Post request
         url = "http://"+mgmt_ip+":8080/startPFbridge"
         querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\", \"trans\": \"\" }"}
-        LOG.info("Data params are : "+querystring)
+        LOG.info(querystring)
        
         headers = {
             'content-type': "application/x-www-form-urlencoded",
