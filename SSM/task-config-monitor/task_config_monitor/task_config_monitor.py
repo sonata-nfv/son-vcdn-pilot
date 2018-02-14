@@ -218,6 +218,7 @@ class TaskConfigMonitorSSM(sonSMbase):
 
             if alert_name == "mon_rule_num_reqs":
                 if not self.monitor_event_finished:
+                    LOG.info("Event should trigger MANO")
                     self.push_monitor_event()
                     self.monitor_event_finished = True
 
@@ -227,6 +228,7 @@ class TaskConfigMonitorSSM(sonSMbase):
         workflow.
         """
 
+        LOG.info("Sending reconfiguration trigger to MANO")
         message = {}
         message['workflow'] = 'reconfigure'
         message['service_instance_id'] = self.sfuuid
@@ -241,6 +243,7 @@ class TaskConfigMonitorSSM(sonSMbase):
         This topic processes an emulated monitor event
         """
 
+        LOG.info("Received emulated reconfiguration trigger through broker.")
         self.push_monitor_event()
 
 
