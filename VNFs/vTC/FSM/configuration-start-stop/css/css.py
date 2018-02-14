@@ -214,6 +214,33 @@ class CssFSM(sonSMbase):
         LOG.info("Updating datasource")
         ssh_client.sendCommand("sudo curl -X PUT --connect-timeout 60 --data-binary @/root/gowork/src/vtc_dashboard/static/json/grafana_init_datasources.json -H 'Content-Type:application/json' -H 'Accept: application/json' http://admin:admin@"+mgmt_ip+":3000/api/datasources/15")
         ssh_client.close()
+        time.sleep(10)
+        
+        
+        #Stopping PFBRidge
+        url = "http://"+self.hostIp+":8080/stopPFbridge"
+        headers = {
+            'accept': "application/json",
+            }
+        response = requests.request("POST", url, headers=headers)
+        LOG.info("Response on post request: " + str(response.text))
+        LOG.info("Status code of response " + str(response.status_code))
+           
+        #Starting PFBridge agan
+        url = "http://"+self.hostIp+":8080/startPFbridge"
+        querystring = {"jsonIn":"{\"netIN\":\"eth1\",\"netOUT\":\"eth2\",\"trans\":\"\"}"}
+        LOG.info(" Data to send to "+url+" is : ")
+        LOG.info(querystring)
+        headers = {
+            'content-type': "application/x-www-form-urlencoded",
+            'accept': "application/json",
+            }
+
+        response = requests.request("POST", url, headers=headers, params=querystring, timeout=5.0)
+        LOG.info("Response on post request: " + str(response.text))
+        LOG.info("Status code of response " + str(response.status_code))
+        
+        
         LOG.info('Configurations completed')
 
         #else:
