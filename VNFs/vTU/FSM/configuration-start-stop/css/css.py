@@ -190,21 +190,7 @@ class CssFSM(sonSMbase):
         # else:
         #     LOG.error("Couldn't obtain SP IP address. Monitoring configuration aborted")
 
-        #Configuring vTU docker container
-        LOG.info('vTU Start: Start the vTU docker container')
-        ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
-        command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(self.mgmt_ip)
-        ssh_client.sendCommand(command)
-        ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/input /home/sonata/input')
-        ssh_client.sendCommand('sudo mount 10.100.0.40:/home/localadmin/output /home/sonata/output')
-        self.createJsonFile()
-        ssh_client.sendFile('JSON_file.json')
-        ssh_client.sendCommand('ls /tmp/')
-        ssh_client.sendCommand('sudo mv /tmp/JSON_file.json /home/sonata/output/JSON_file.json')
-        ssh_client.sendCommand('sudo docker-compose up -d')
-        self.creatingJobId(self.mgmt_ip)
-        ssh_client.close()
-        LOG.info('vTU Service Config: Completed')
+
         # Create a response for the FLM
         response = {}
         response['status'] = 'COMPLETED'
@@ -252,7 +238,23 @@ class CssFSM(sonSMbase):
         eg2 = ip.split('/')
         egress = eg2[0]
         LOG.info("egress : " +egress)
-
+        
+        #Configuring vTU docker container
+        LOG.info('vTU Start: Start the vTU docker container')
+        ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
+        command = 'sed -i "s/API_IP=.*/API_IP=%s/g" .env' %(self.mgmt_ip)
+        ssh_client.sendCommand(command)
+        ssh_client.sendCommand('sudo mount '+egress+':/home/localadmin/input /home/sonata/input')
+        ssh_client.sendCommand('sudo mount '+egress+':/home/localadmin/output /home/sonata/output')
+        self.createJsonFile()
+        ssh_client.sendFile('JSON_file.json')
+        ssh_client.sendCommand('ls /tmp/')
+        ssh_client.sendCommand('sudo mv /tmp/JSON_file.json /home/sonata/output/JSON_file.json')
+        ssh_client.sendCommand('sudo docker-compose up -d')
+        self.creatingJobId(self.mgmt_ip, egress)
+        ssh_client.close()
+        LOG.info('vTU Service Config: Completed')
+        
         ssh_client = Client(self.mgmt_ip,'sonata','sonata',LOG)
         #TODO 
         eth0 = ssh_client.sendCommand('ifconfig eth0 | grep "inet\ addr" | cut -d: -f2 | cut -d" " -f1')
@@ -317,7 +319,7 @@ class CssFSM(sonSMbase):
                 return False
         return True
 
-    def creatingJobId(self, mgmt_ip):
+    def creatingJobId(self, mgmt_ip, egress):
         url = "http://" + mgmt_ip + ":8083/job"
         headers = {
             'Cache-Control': "no-cache",    
@@ -343,7 +345,7 @@ class CssFSM(sonSMbase):
             LOG.info(contentID)
 
             url = "http://" + mgmt_ip + ":8083/output/publish/" + contentID
-            payload = "{\n\t\"data\":\n\t{\n\"name\": \"Sonata_demo\",\n\"id\": \""+ contentID +"\",\n\"preview\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/main.mp4\",\n\"thumbnail\": \"http://10.100.0.40:8080/dash/Sonata_demo/Webmedia/portrait/thumnail.png\",\n\"url\": \"http://10.100.0.40:8080/dash/Sonata_demo/sintel.xml\"\n\t}\n}"
+            payload = "{\n\t\"data\":\n\t{\n\"name\": \"Sonata_demo\",\n\"id\": \""+ contentID +"\",\n\"preview\": \"http://"+egress+":8080/dash/Sonata_demo/Webmedia/portrait/main.mp4\",\n\"thumbnail\": \"http://"+egress+":8080/dash/Sonata_demo/Webmedia/portrait/thumnail.png\",\n\"url\": \"http://"+egress+":8080/dash/Sonata_demo/sintel.xml\"\n\t}\n}"
             headers = {
                 'Content-Type': "application/json",
                 'Cache-Control': "no-cache",
