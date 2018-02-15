@@ -130,8 +130,8 @@ class TaskConfigMonitorSSM(sonSMbase):
         # Update the received schedule
         schedule = content['schedule']
 
-#        schedule.insert(7, 'vnfs_config')
-#        schedule.insert(7, 'configure_ssm')
+        schedule.insert(7, 'vnfs_config')
+        schedule.insert(7, 'configure_ssm')
 
         response = {'schedule': schedule, 'status': 'COMPLETED'}
 
@@ -151,12 +151,15 @@ class TaskConfigMonitorSSM(sonSMbase):
         what the required payload is.
         """
 
+        if content["workflow"] == 'instantiation':
+            msg = "Received a configure request for the instantiation workflow"
+            self.configure_instantiation(corr_id, content)
+
         if content["workflow"] == 'reconfigure':
             msg = "Received a configure request for the reconfigure workflow"
-            LOG.info(msg)
-            self.configure_service(corr_id, content)
+            self.configure_reconfigure(corr_id, content)
 
-    def configure_service(self, corr_id, content):
+    def configure_instantiation(self, corr_id, content):
         """
         This method creates the configure response for the instantiation
         workflow. It will set the trigger for a config_event for each VNF.
@@ -169,7 +172,36 @@ class TaskConfigMonitorSSM(sonSMbase):
         for vnf in content['functions']:
             new_entry = {}
             new_entry['id'] = vnf['id']
-            if vnf['vnfd']['name'] in ['vtc-vnf', 'vtu-vnf']:
+            if vnf['vnfd']['name'] in ['vtu-vnf']:
+                new_entry['configure'] = {'trigger': True,
+                                          'payload': {}}
+            else:
+                new_entry['configure'] = {'trigger': False,
+                                          'payload': {}}
+
+            response['vnf'].append(new_entry)
+
+        LOG.info("Generated response: " + str(response))
+        # Sending a response
+        topic = 'generic.ssm.' + self.sfuuid
+        self.manoconn.notify(topic,
+                             yaml.dump(response),
+                             correlation_id=corr_id)
+
+    def configure_reconfigure(self, corr_id, content):
+        """
+        This method creates the configure response for the reconfiguration
+        workflow. It will set the trigger for a config_event for each VNF.
+        The payload for the config_event is the generic one provided by the
+        SP.
+        """
+        response = {}
+        response['vnf'] = []
+
+        for vnf in content['functions']:
+            new_entry = {}
+            new_entry['id'] = vnf['id']
+            if vnf['vnfd']['name'] in ['vtc-vnf']:
                 payload = {}
                 payload['nsr'] = self.nsr
                 payload['vnfrs'] = self.vnfrs
