@@ -146,7 +146,7 @@ monitoring_rules:
     description: "Trigger events if number of requests is more than 20."
     duration: 5
     duration_unit: "s"
-    condition: "vdu01:num_reqs > 20"
+    condition: "vdu01:num_reqs > 7"
     notification:
       - name: "notification02"
         type: "rabbitmq_message"
