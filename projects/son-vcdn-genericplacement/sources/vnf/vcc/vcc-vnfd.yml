@@ -4,7 +4,7 @@
 descriptor_version: "vnfd-schema-02"
 vendor: "eu.sonata-nfv"
 name: "vcc-vnf"
-version: "0.3"
+version: "0.1"
 author: "Stavros Kolometsos @ Demokritos"
 description: "VNF implementing a vCacheContent"
 ##
