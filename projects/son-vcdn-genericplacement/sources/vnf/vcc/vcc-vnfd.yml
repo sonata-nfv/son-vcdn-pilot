@@ -4,7 +4,7 @@
 descriptor_version: "vnfd-schema-02"
 vendor: "eu.sonata-nfv"
 name: "vcc-vnf"
-version: "0.1"
+version: "0.9"
 author: "Stavros Kolometsos @ Demokritos"
 description: "VNF implementing a vCacheContent"
 ##
@@ -14,7 +14,7 @@ virtual_deployment_units:
   - id: "1"
     vm_image: "http://files.sonata-nfv.eu/son-vcdn-pilot/vcc-vnf/sonata-vcc.qcow2"
     vm_image_format: "qcow2"
-    vm_image_md5: 'f1b74b626f6be8be9f957d2f5164327b'
+    vm_image_md5: '88d0a5bc36694ea5d23be81283cd9f80'
     resource_requirements:
       cpu:
         vcpus: 1
