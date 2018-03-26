@@ -31,7 +31,7 @@ network_functions:
   - vnf_id: "vnf_vtc"
     vnf_vendor: "eu.sonata-nfv"
     vnf_name: "vtc-vnf"
-    vnf_version: "0.2"
+    vnf_version: "0.12"
   - vnf_id: "vnf_vcc"
     vnf_vendor: "eu.sonata-nfv"
     vnf_name: "vcc-vnf"
