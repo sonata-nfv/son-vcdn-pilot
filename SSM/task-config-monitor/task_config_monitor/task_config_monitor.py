@@ -275,9 +275,10 @@ class TaskConfigMonitorSSM(sonSMbase):
         This topic processes an emulated monitor event
         """
 
-        LOG.info("Received emulated reconfiguration trigger through broker.")
-        self.push_monitor_event()
-
+        if not self.monitor_event_finished:
+            LOG.info("Manual Event should trigger MANO")
+            self.push_monitor_event()
+            self.monitor_event_finished = True
 
 def main():
     TaskConfigMonitorSSM()
