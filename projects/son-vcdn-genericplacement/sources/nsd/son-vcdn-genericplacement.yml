@@ -22,7 +22,7 @@ vendor: "eu.sonata-nfv.service-descriptor"
 name: "sonata-vcdn-genericplacement"
 version: "0.19.1"
 author: "SONATA Consortium"
-description: "Content Delivery Network pilot with placement SSM"
+description: "Content Delivery Network pilot with default non-optimised placement"
 ##
 ## The various network functions this service
 ## is composed of.
