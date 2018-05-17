@@ -2,7 +2,7 @@ descriptor_extension: yml
 package:
   description: SONATA vCDN GENERIC PLACEMENT
   maintainer: Felipe Vicens, ATOS, felipe.vicens@atos.net
-  name: "son-vcdn-genericplacement"
-  vendor: "eu.sonata-nfv"
+  name: "5gtango-vtc-vcc-nsd"
+  vendor: "eu.5gtango-nfv"
   version: "0.1"
 version: '0.5'

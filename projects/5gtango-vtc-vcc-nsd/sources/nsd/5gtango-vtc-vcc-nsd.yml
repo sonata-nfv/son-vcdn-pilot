@@ -18,28 +18,25 @@
 ---
 descriptor_version: "1.0"
 
-vendor: "eu.sonata-nfv.service-descriptor"
-name: "sonata-vcdn-genericplacement"
+vendor: "eu.5gtango-nfv.service-descriptor"
+name: "5gtango-vtc-vcc-nsd"
 version: "0.19.1"
-author: "SONATA Consortium"
-description: "Content Delivery Network pilot with default non-optimised placement"
+author: "5GTANGO Consortium"
+description: "VTraffic Classifier and vCache"
 ##
 ## The various network functions this service
 ## is composed of.
 ##
 network_functions:
   - vnf_id: "vnf_vtc"
-    vnf_vendor: "eu.sonata-nfv"
+    vnf_vendor: "eu.5gtango-nfv"
     vnf_name: "vtc-vnf"
-    vnf_version: "0.12"
+    vnf_version: "0.9"
   - vnf_id: "vnf_vcc"
-    vnf_vendor: "eu.sonata-nfv"
+    vnf_vendor: "eu.5gtango-nfv"
     vnf_name: "vcc-vnf"
-    vnf_version: "0.91"
-  - vnf_id: "vnf_vtu"
-    vnf_vendor: "eu.sonata-nfv"
-    vnf_name: "vtu-vnf"
-    vnf_version: "0.5"
+    vnf_version: "0.9"
+
 
 
 # Service specific Managers
@@ -79,8 +76,7 @@ virtual_links:
     connectivity_type: "E-LAN"
     connection_points_reference:
       - "vnf_vtc:cpmgmt"
-      - "vnf_vcc:cpmgmt"
-      - "vnf_vtu:cpmgmt"  
+      - "vnf_vcc:cpmgmt"  
       - "nscpmgmt"
   - id: "vlinput"
     connectivity_type: "E-Line"
@@ -93,11 +89,6 @@ virtual_links:
     connection_points_reference:
       - "vnf_vtc:cpoutput"
       - "vnf_vcc:cpinput"
-  - id: "vtc-2-vtu"
-    connectivity_type: "E-Line"
-    connection_points_reference:
-      - "vnf_vtc:cpoutput"
-      - "vnf_vtu:cpinput"
   - id: "vlvtcout"
     connectivity_type: "E-Line"
     connection_points_reference:
@@ -121,7 +112,6 @@ forwarding_graphs:
     constituent_vnfs:
       - "vnf_vtc"
       - "vnf_vcc"
-      - "vnf_vtu"
     constituent_virtual_links: 
       - "vlinput" #the input to the NS (since it is a L3 redirection to the vTU may not be required in the definition.
       - "vtc-chain"

@@ -2,9 +2,9 @@
 ## vTC VNF descriptor.
 ##
 descriptor_version: "vnfd-schema-02"
-vendor: "eu.sonata-nfv"
+vendor: "eu.5gtango-nfv"
 name: "vtc-vnf"
-version: "0.12"
+version: "0.9"
 author: "George Xilouris, Stavros Kolometsos :@ NCSRD"
 description: "VNF implementing a vTC for traffic inspection and classification"
 ##

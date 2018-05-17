@@ -2,9 +2,9 @@
 ## vCC VNF descriptor.
 ##
 descriptor_version: "vnfd-schema-02"
-vendor: "eu.sonata-nfv"
+vendor: "eu.5gtango-nfv"
 name: "vcc-vnf"
-version: "0.91"
+version: "0.9"
 author: "Stavros Kolometsos @ Demokritos"
 description: "VNF implementing a vCacheContent"
 ##
