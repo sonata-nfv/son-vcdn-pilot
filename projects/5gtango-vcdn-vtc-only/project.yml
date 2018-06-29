@@ -1,0 +1,17 @@
+descriptor_extension: yml
+files:
+- path: sources/nsd/5gtango-vcdn-vtc-only.yml
+  tags:
+  - eu.5gtango
+  type: application/vnd.5gtango.nsd
+- path: sources/vnf/vtc/vtc-nfd.yml
+  tags:
+  - eu.5gtango
+  type: application/vnd.5gtango.vnfd
+package:
+  description: SONATA vCDN
+  maintainer: Felipe Vicens, ATOS, felipe.vicens@atos.net
+  name: "5gtango-vcdn-vtc-only"
+  vendor: "eu.sonata-nfv"
+  version: "0.1"
+version: '0.5'
